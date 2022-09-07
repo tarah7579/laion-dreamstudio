@@ -76,6 +76,7 @@ export default {
     },
     methods: {
         getAnnotation: function () {
+            this.clear();
             imageNumber = (humans_zeroes[part] + Math.floor(Math.random() * humans_length[part] + 1)).slice(-(humans_zeroes[part].length));
             imgSrc =
                 "https://raw.githubusercontent.com/LAION-AI/human_artifacts/main/" + humans_choice[part] + "/" +
@@ -103,7 +104,8 @@ export default {
                 image_id: "Humans" + String(imageNumber),
                 annotation: svgpath
             };
-            this.getAnnotation(annotationData);
+            //this.uploadAnnotations(annotationData);
+            this.getAnnotation();
         },
         downloadMask: function () {
             const dataURL = canv.freeDrawingBrush.canvas.toDataURL({
