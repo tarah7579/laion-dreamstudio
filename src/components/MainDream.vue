@@ -54,7 +54,7 @@ const params = {
     'Seed': String(''),
     'Input Prompt': String(''),
     'apiKey': String(''),
-    'host': String('')
+    'host': String('https://grpc.stability.ai:443')
 }
 export default {
   name: 'MainDream',
