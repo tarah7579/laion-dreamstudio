@@ -3,7 +3,7 @@
         <el-input v-model="v_param" 
             v-on:change="this.updateValue" 
             id="prompt-apikey" 
-            type="text" 
+            type="password" 
             autocomplete="off" 
             placeholder="apiKey">
         </el-input>
