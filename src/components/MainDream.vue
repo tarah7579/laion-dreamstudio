@@ -16,6 +16,8 @@
                                 <ParamSelect @updateValue="updateParams" param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." param_value="k_lms" />
                                 <ParamCheck param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" />
                                 <ParamApiKey @updateValue="updateParams" param_name="apiKey" param_value="api key" />
+                                <ParamHost @updateValue="updateParams" param_name="host" param_value="https://grpc.stability.ai:443" />
+
                             </div>
                         </div>
                     </div>
@@ -41,6 +43,7 @@ import ImageGenerated from './ImageGenerated.vue'
 import ParamButton from './ParamButton.vue'
 import ParamApiKey from './ParamApiKey.vue'
 import ParamPrompt from './ParamPrompt.vue'
+import ParamHost from './ParamHost.vue'
 const params = {
     'Width': Number(512),
     'Height': Number(512),
@@ -50,7 +53,8 @@ const params = {
     'Sampler': 7,
     'Seed': String(''),
     'Input Prompt': String(''),
-    'apiKey': String('')
+    'apiKey': String(''),
+    'host': String('')
 }
 export default {
   name: 'MainDream',
@@ -58,6 +62,7 @@ export default {
     ParamSlider,
     ParamSelect,
     ParamCheck,
+    ParamHost,
     ParamButton,
     ParamPrompt,
     ParamApiKey,
@@ -75,6 +80,7 @@ data () {
     },
     onGenerate() {
         const api = generate({
+        host: params['host'],
         prompt: params['Input Prompt'],
         width: params['Width'],
         height: params['Height'],
@@ -83,6 +89,7 @@ data () {
         samples: params['Number of Images'],
         diffusion: diffusionMap[params['Sampler']],
         apiKey: params['apiKey'],
+        debug: true
         })  
 
         api.on('image', ({  binary }) => {
