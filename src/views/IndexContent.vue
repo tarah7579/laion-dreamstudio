@@ -4,6 +4,7 @@
       <div id="kt_content_container" class="container d-flex flex-column container-xxl"  style="height: calc(100vh - 100px); max-width: unset; position: relative;">
         <div class="main-page" >
           <div style="width:50%" class="generated-wrapper" >
+            <h3 style="color:#F5FEFF">Annotate images to get credits.</h3>
             <h3>Credits: </h3>
             <span><input disabled class="form-control" v-model="credits" /></span>
             <h3>Word phrase:</h3>
