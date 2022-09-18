@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
+const WebSocket = require('ws');
 
 export default async function (req: VercelRequest, res: VercelResponse) {
     try {
