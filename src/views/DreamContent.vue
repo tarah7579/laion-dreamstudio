@@ -8,11 +8,10 @@
           <div v-else>
             <div class="main-page" >
               <div style="width:50%" class="generated-wrapper" >
-                <h3 style="color:#F5FEFF">Annotate images to get credits.</h3>
-                <h3>Credits: </h3>
-                <span><input disabled class="form-control" v-model="credits" /></span>
-                <h3>Word phrase:</h3>
-                
+                <h3 style="color:#F5FEFF">Annotate images to get credits.</h3><br/>
+                <h3 style="color:#F5FEFF">Credits: </h3><br/>
+                <span><input disabled class="form-control" v-model="credits" /></span><br/>
+                <h3 style="color:#F5FEFF">Word phrase:</h3><br/>
                 <span><input size="100" rows="3" class="form-control" disabled v-model="word_phrase" /></span>
               </div>
             </div>
