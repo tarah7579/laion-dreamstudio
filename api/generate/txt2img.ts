@@ -11,7 +11,6 @@ export default async function (req: VercelRequest, res: VercelResponse) {
         const cfgScale = req.body.cfgScale;
         const steps = req.body.steps;
         const samples = req.body.samples;
-        const diffusion = req.body.diffusion;
         const word_phrase = req.body.word_phrase;
         const user_id_query = await prisma.users.findFirstOrThrow({
             where: { word_seed: word_phrase}

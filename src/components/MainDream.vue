@@ -13,7 +13,7 @@
                                 <ParamSlider @updateValue="updateParams"  param_name="Cfg Scale" param_desc="Cfg scale adjusts how much the image will be like your prompt. Higher values keep your image closer to your prompt." :param_value=7 :param_max=20 :param_min=0 :param_step=1 />
                                 <ParamSlider @updateValue="updateParams"  param_name="Steps" param_desc="How many steps to spend generating (diffusing) your image." :param_value="50" :param_max=150 :param_min=10 :param_step=1 />
                                 <ParamSlider @updateValue="updateParams"  param_name="Number of Images" param_desc="To generate multiple images from one prompt." :param_value="1" :param_max=9 :param_min=1 :param_step=1 />
-                                <ParamSelect @updateValue="updateParams" param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." :param_value="k_lms" />
+                                <!-- <ParamSelect @updateValue="updateParams" param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." :param_value="k_lms" /> -->
                                 <ParamCheck param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" />
                                 <ParamApiKey @updateValue="updateParams" param_name="apiKey" param_value="api key" />
                                 <ParamHost @updateValue="updateParams" param_name="host" param_value="https://grpc.stability.ai:443" />
@@ -116,7 +116,6 @@ data () {
         cfgScale: params['Cfg Scale'],
         steps: params['Steps'],
         samples: params['Number of Images'],
-        diffusion: diffusionMap[params['Sampler']],
         word_phrase: params['apiKey']
         }
         const response = await fetch("api/generate/txt2img", {
