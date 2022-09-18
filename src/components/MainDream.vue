@@ -26,6 +26,7 @@
                     <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
                         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
                         <ParamButton buttonText="Dream" @click="this.onGenerate"/>
+                        <ParamButton buttonText="Dream WebSocket" @click="this.onGenerateWss"/>
                     </form>
                 </div>
             </div>
@@ -35,6 +36,7 @@
 
 <script lang="ts">
 import  { generate } from '@/stability/stability'
+import { generateWss } from '@/stability/selas_wss'
 import  { diffusionMap } from '@/stability/utils'
 import ParamSlider from './ParamSlider.vue'
 import ParamSelect from './ParamSelect.vue'
@@ -105,6 +107,20 @@ data () {
     updateImage(generatedImage) {
         console.log("updating image")
         this.generatedImage = generatedImage
+    },
+    onGenerateWss() {
+        generateWss({
+        host: "wss://selas.dev/laion",
+        prompt: params['Input Prompt'],
+        width: params['Width'],
+        height: params['Height'],
+        cfgScale: params['Cfg Scale'],
+        steps: params['Steps'],
+        samples: params['Number of Images'],
+        diffusion: diffusionMap[params['Sampler']],
+        apiKey: params['apiKey'],
+        debug: true
+        })
     }
 }
 }
