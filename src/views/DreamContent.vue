@@ -7,7 +7,7 @@
           <MainDream v-if="credits > 0" />
           <div v-else>
             <div class="main-page" >
-              <div class="generated-wrapper" >
+              <div style="width:50%" class="generated-wrapper" >
                 <h3 style="color:#F5FEFF">Annotate images to get credits.</h3>
                 <h3>Credits: </h3>
                 <span><input disabled class="form-control" v-model="credits" /></span>
