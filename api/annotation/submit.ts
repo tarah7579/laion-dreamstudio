@@ -15,7 +15,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
         });
         const user_id = user_id_query.id;
         const current_time = new Date();
-        const rate_limit_time = new Date(current_time.setSeconds(current_time.getSeconds() - rate_limit_seconds));
+        const rate_limit_time = new Date(current_time.setSeconds(current_time.getSeconds() - rate_limit_seconds) + (current_time.getTimezoneOffset() * 60000));
         const rate_limit = await prisma.artifact_annotations.count({
             where: { user_id: user_id, created: { gte: rate_limit_time } }, 
         })
