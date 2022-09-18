@@ -20,7 +20,7 @@
                     <span><input disabled v-model="v_credits" /></span>
                     <h3>Word phrase:</h3>
                     
-                    <span><input disabled v-model="v_word_phrase" /></span>
+                    <span><input disabled v-model="word_phrase" /></span>
 
                     <div className="param-slider">
                     <div className="param-desc">1 annotation = 1 credit</div>
@@ -78,12 +78,12 @@ export default {
         return {
             generatedImage: '',
             v_credits: 0,
-            v_word_phrase: ''
+            word_phrase: ''
         };
     },
     methods: {
         getCredits: async function () {
-            const userData = {word_phrase: this.v_word_phrase }
+            const userData = {word_phrase: this.word_phrase }
             const response = await fetch("api/user/credits", {
                 method: "post",
                 body: JSON.stringify(userData),
@@ -95,14 +95,14 @@ export default {
             this.v_credits = serverdata['credits'];
         },
         newSession: async function () {
-            const response = await fetch("api/user/new", {
+          const response = await fetch("api/user/new", {
                 method: "get",
                 headers: {
                     "Content-Type": "application/json; charset=UTF-8"
                 }
             });
             const serverdata = await response.json();
-            this.v_word_phrase = serverdata['word_phrase'];
+            this.word_phrase = serverdata['word_phrase'];
         },
         getAnnotation: function () {
             
@@ -135,7 +135,7 @@ export default {
             const annotationData = {
                 image_id: "Humans" + String(imageNumber),
                 annotation: svgpath,
-                word_phrase: this.v_word_phrase
+                word_phrase: this.word_phrase
             };
             const response = await this.uploadAnnotations(annotationData);
             if (response != "rate limit") {
@@ -207,7 +207,16 @@ export default {
     },
     async mounted() {
         this.reloadPaintWidget();
-        await this.newSession();
+        if (localStorage.word_phrase) {
+            this.word_phrase = localStorage.word_phrase;
+        } else {
+            await this.newSession();
+        }
+    },
+    watch: {
+      word_phrase(new_word_phrase) {
+        localStorage.word_phrase = new_word_phrase;
+      }
     },
     components: { ImageAnnotation, ParamButton }
 }
