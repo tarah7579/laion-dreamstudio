@@ -6,7 +6,11 @@
                 <ImageCost />
                 <MainDream v-if="credits > 0" />
                 <div v-else>
-                  Annotate images to get credits.
+                  <div class="main-page" >
+                    <div class="generated-wrapper" >
+                      <h3>Annotate images to get credits.</h3>
+                    </div>
+                  </div>
                 </div>
                 <div ></div>
             </div>
