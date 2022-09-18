@@ -7,7 +7,7 @@
                 v-on:change="this.updateValue" 
                 class="el-input" 
                 size="large" 
-                :placeholder="param_value" 
+                :placeholder="v_select" 
                 default-first-option>
             <el-option
                 v-for="item in options"

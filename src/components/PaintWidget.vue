@@ -122,11 +122,12 @@ export default {
                 }
             });
             const serverdata = await response.json();
-            this.getCredits();
-            console.log(serverdata);
-            return serverdata;
+            if (serverdata['result'] != "rate limit") {
+                await this.getCredits();
+            }
+            return serverdata['result'];
         },
-        passAnnotation: function () {
+        passAnnotation: async function () {
             // let jsons = canv.freeDrawingBrush.canvas._objects;
             // console.log();
             const svgpath = canv.freeDrawingBrush.canvas.toSVG();
@@ -136,8 +137,8 @@ export default {
                 annotation: svgpath,
                 word_phrase: this.v_word_phrase
             };
-            const response = this.uploadAnnotations(annotationData);
-            if (response.result != "rate limit") {
+            const response = await this.uploadAnnotations(annotationData);
+            if (response != "rate limit") {
                 this.getAnnotation();
                 this.clear();
             }
@@ -204,9 +205,9 @@ export default {
             this.createCanvas(part);
         },
     },
-    mounted() {
+    async mounted() {
         this.reloadPaintWidget();
-        this.newSession();
+        await this.newSession();
     },
     components: { ImageAnnotation, ParamButton }
 }
