@@ -1,11 +1,19 @@
 <template>
-    <div id="kt_content" class="content d-flex flex-column flex-column-fluid"  style="background: rgb(36, 36, 36);">
-      <h3>Credits: </h3>
-      <span><input disabled v-model="credits" /></span>
-      <h3>Word phrase:</h3>
-      
-      <span><input size="100" rows="3" class="form-control" disabled v-model="word_phrase" /></span>
+  <div id="kt_content" class="content d-flex flex-column flex-column-fluid"  style="background: rgb(36, 36, 36);">
+    <div class="post d-flex flex-column-fluid" >
+      <div id="kt_content_container" class="container d-flex flex-column container-xxl"  style="height: calc(100vh - 100px); max-width: unset; position: relative;">
+        <div class="main-page" >
+          <div style="width:50%" class="generated-wrapper" >
+            <h3>Credits: </h3>
+            <span><input disabled class="form-control" v-model="credits" /></span>
+            <h3>Word phrase:</h3>
+            
+            <span><input size="100" rows="3" class="form-control" disabled v-model="word_phrase" /></span>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
