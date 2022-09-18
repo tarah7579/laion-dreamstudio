@@ -108,9 +108,8 @@ data () {
         console.log("updating image")
         this.generatedImage = generatedImage
     },
-    onGenerateWss() {
-        generateWss({
-        host: "wss://selas.dev/laion",
+    async onGenerateWss() {
+        const promptData = {
         prompt: params['Input Prompt'],
         width: params['Width'],
         height: params['Height'],
@@ -118,9 +117,26 @@ data () {
         steps: params['Steps'],
         samples: params['Number of Images'],
         diffusion: diffusionMap[params['Sampler']],
-        apiKey: params['apiKey'],
-        debug: true
-        })
+        word_phrase: params['apiKey']
+        }
+        const response = await fetch("api/generate/txt2img", {
+            method: "post",
+            body: JSON.stringify(promptData),
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            }
+        });
+        const serverdata = await response.json();
+        if (serverdata['result'] == "success") {
+            this.generatedImage = serverdata['image'];
+        }
+        else if (serverdata['result'] == "no credits") {
+            console.log("no credits");
+        }
+        else {
+            console.log(serverdata['result']);
+        }
+
     }
 }
 }
