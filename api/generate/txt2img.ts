@@ -22,7 +22,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
         connection.onmessage = function(event) {
             const data = JSON.parse(event.data)
             if ("jobId" in data) { 
-                // console.log(data["jobId"]) 
+                console.log(data["jobId"]) 
             } 
             else if ("status" in data && "queue" in data && "images" in data && "nPreviousJobs" in data) {
                 const status = data["status"]
@@ -30,13 +30,13 @@ export default async function (req: VercelRequest, res: VercelResponse) {
                 const images = data["images"]
                 const nPreviousJobs = data["nPreviousJobs"]
                 if (status == "pending") {
-                    // console.log('status: %s - queue position: %d', status, queue)
+                    console.log('status: %s - queue position: %d', status, queue)
                 } else if (status == "accepted") {
-                    // console.log('status: %s - generation in progress', status)
+                    console.log('status: %s - generation in progress', status)
                 } else if (status == "completed") {
-                    // console.log('status: %s', status)
+                    console.log('status: %s', status)
                     return res.status(200).json( { result: "success", image: images[0] } );
-                    // console.log('image: %s', images[0])
+                    console.log('image: %s', images[0])
                 } else {
                     const result = "unknown status: " + status;
                     return res.status(503).json( { result: result } );
@@ -45,19 +45,19 @@ export default async function (req: VercelRequest, res: VercelResponse) {
             else {
                 const result = "unknown status: ";
                     return res.status(503).json( { result: result } );
-                // console.log("unknown api response:", JSON.stringify(data))
+                console.log("unknown api response:", JSON.stringify(data))
             }
 
         }
         connection.onopen = function(event) {
-            // console.log("Connected")
+            console.log("Connected")
             const message = {prompt: prompt}
             const message_json = JSON.stringify(message)
-            // console.log("Sending" + message_json)
+            console.log("Sending" + message_json)
             connection.send(message_json)
         }
       } catch (error) {
-        return res.status(400).json({ result: error });
+        return res.status(400).json({ result: error.message });
       }
     
 }
