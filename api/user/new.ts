@@ -8,7 +8,7 @@ const wordlist = ['will', 'jacket', 'say', 'grid', 'enforce', 'switch', 'bean', 
 
 export default async function (req: VercelRequest, res: VercelResponse) {
 	const min = 0;
-	const max = 2048;
+	const max = wordlist.length;
 	let word_phrase = "";
 	for (let n = 0; n < 12; n++) {
 		const i = Math.floor(Math.random() * (max - min + 1)) + min;
