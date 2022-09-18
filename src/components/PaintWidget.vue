@@ -16,7 +16,12 @@
         <div class=""  style="height: 100%;">
             <div class="params params-desktop" >
                 <div>
-                    <h3>Credits: 0</h3>
+                    <h3>Credits: </h3>
+                    <span><input disabled v-model="v_credits" /></span>
+                    <h3>Word phrase:</h3>
+                    
+                    <span><input disabled v-model="v_word_phrase" /></span>
+
                     <div className="param-slider">
                     <div className="param-desc">1 annotation = 1 credit</div>
                     <span className="param-desc">
@@ -71,10 +76,34 @@ export default {
     name: "PaintWidget",
     data: function () {
         return {
-            generatedImage: ''
+            generatedImage: '',
+            v_credits: 0,
+            v_word_phrase: ''
         };
     },
     methods: {
+        getCredits: async function () {
+            const userData = {word_phrase: this.v_word_phrase }
+            const response = await fetch("api/user/credits", {
+                method: "post",
+                body: JSON.stringify(userData),
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8"
+                }
+            });
+            const serverdata = await response.json();
+            this.v_credits = serverdata['credits'];
+        },
+        newSession: async function () {
+            const response = await fetch("api/user/new", {
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8"
+                }
+            });
+            const serverdata = await response.json();
+            this.v_word_phrase = serverdata['word_phrase'];
+        },
         getAnnotation: function () {
             
             imageNumber = (humans_zeroes[part] + Math.floor(Math.random() * humans_length[part] + 1)).slice(-(humans_zeroes[part].length));
@@ -85,7 +114,7 @@ export default {
             this.generatedImage = imgSrc;
         },
         uploadAnnotations: async function (annotationData) {
-            const response = await fetch("api/dbwrite_many", {
+            const response = await fetch("api/annotation/submit", {
                 method: "post",
                 body: JSON.stringify(annotationData),
                 headers: {
@@ -93,7 +122,9 @@ export default {
                 }
             });
             const serverdata = await response.json();
+            this.getCredits();
             console.log(serverdata);
+            return serverdata;
         },
         passAnnotation: function () {
             // let jsons = canv.freeDrawingBrush.canvas._objects;
@@ -102,11 +133,15 @@ export default {
             // const paths = JSON.stringify(jsons.map((x: any) => x.path.map((y: any) => [y[1], y[2]])));
             const annotationData = {
                 image_id: "Humans" + String(imageNumber),
-                annotation: svgpath
+                annotation: svgpath,
+                word_phrase: this.v_word_phrase
             };
-            //this.uploadAnnotations(annotationData);
-            this.getAnnotation();
-            this.clear();
+            const response = this.uploadAnnotations(annotationData);
+            if (response.result != "rate limit") {
+                this.getAnnotation();
+                this.clear();
+            }
+            
         },
         downloadMask: function () {
             const dataURL = canv.freeDrawingBrush.canvas.toDataURL({
@@ -171,6 +206,7 @@ export default {
     },
     mounted() {
         this.reloadPaintWidget();
+        this.newSession();
     },
     components: { ImageAnnotation, ParamButton }
 }
