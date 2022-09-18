@@ -57,7 +57,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
             connection.send(message_json)
         }
       } catch (error) {
-        return res.status(400).json({ result: 'error' });
+        return res.status(400).json({ result: error });
       }
     
 }
