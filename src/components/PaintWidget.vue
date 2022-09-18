@@ -83,7 +83,7 @@ export default {
     },
     methods: {
         getCredits: async function () {
-            const userData = {"word_phrase": this.v_word_phrase }
+            const userData = {word_phrase: this.v_word_phrase }
             const response = await fetch("api/user/credits", {
                 method: "post",
                 body: JSON.stringify(userData),
@@ -132,7 +132,8 @@ export default {
             // const paths = JSON.stringify(jsons.map((x: any) => x.path.map((y: any) => [y[1], y[2]])));
             const annotationData = {
                 image_id: "Humans" + String(imageNumber),
-                annotation: svgpath
+                annotation: svgpath,
+                word_phrase: this.v_word_phrase
             };
             this.uploadAnnotations(annotationData);
             this.getAnnotation();
