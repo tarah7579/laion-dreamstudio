@@ -83,7 +83,7 @@ export default {
     },
     methods: {
         getCredits: async function () {
-            const userData = {"word_phrase": this.word_phrase }
+            const userData = {"word_phrase": this.v_word_phrase }
             const response = await fetch("api/user/credits", {
                 method: "post",
                 body: JSON.stringify(userData),
