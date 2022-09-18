@@ -4,7 +4,7 @@
       <span><input disabled v-model="credits" /></span>
       <h3>Word phrase:</h3>
       
-      <span><input disabled v-model="word_phrase" /></span>
+      <span><input size="100" rows="3" class="form-control" disabled v-model="word_phrase" /></span>
     </div>
 </template>
 

@@ -17,10 +17,10 @@
             <div class="params params-desktop" >
                 <div>
                     <h3>Credits: </h3>
-                    <span><input disabled v-model="credits" /></span>
+                    <span><input disabled class="form-control" v-model="credits" /></span>
                     <h3>Word phrase:</h3>
                     
-                    <span><input disabled v-model="word_phrase" /></span>
+                    <span><input size="100" rows="3" class="form-control" disabled v-model="word_phrase" /></span>
 
                     <div className="param-slider">
                     <div className="param-desc">1 annotation = 1 credit</div>
