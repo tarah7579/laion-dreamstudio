@@ -4,7 +4,10 @@
         <div id="kt_content_container" class="container d-flex flex-column container-xxl"  style="height: calc(100vh - 100px); max-width: unset; position: relative;">
             <div  >
                 <ImageCost />
-                <MainDream />
+                <MainDream v-if="credits > 0" />
+                <div v-else>
+                  Annotate images to get credits.
+                </div>
                 <div ></div>
             </div>
         </div>
@@ -22,33 +25,35 @@ export default {
     MainDream
     
   },
-  data: {
-    word_phrase: '',
-    credits: 0
+  data: function() {
+    return {
+      word_phrase: '',
+      credits: 0
+    };
   },
   methods: {
     newSession: async function () {
-        const response = await fetch("api/user/new", {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json; charset=UTF-8"
-            }
-        });
-        const serverdata = await response.json();
-        this.word_phrase = serverdata['word_phrase'];
+      const response = await fetch("api/user/new", {
+          method: "get",
+          headers: {
+              "Content-Type": "application/json; charset=UTF-8"
+          }
+      });
+      const serverdata = await response.json();
+      this.word_phrase = serverdata['word_phrase'];
     },
-  },
-  getCredits: async function () {
-    const userData = {word_phrase: this.word_phrase }
-    const response = await fetch("api/user/credits", {
-        method: "post",
-        body: JSON.stringify(userData),
-        headers: {
-            "Content-Type": "application/json; charset=UTF-8"
-        }
-    });
-    const serverdata = await response.json();
-    this.credits = serverdata['credits'];
+    getCredits: async function () {
+      const userData = {word_phrase: this.word_phrase }
+      const response = await fetch("api/user/credits", {
+          method: "post",
+          body: JSON.stringify(userData),
+          headers: {
+              "Content-Type": "application/json; charset=UTF-8"
+          }
+      });
+      const serverdata = await response.json();
+      this.credits = serverdata['credits'];
+    },
   },
   async mounted() {
     if (localStorage.word_phrase) {

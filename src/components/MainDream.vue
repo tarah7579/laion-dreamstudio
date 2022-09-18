@@ -39,7 +39,6 @@ import  { generate } from '@/stability/stability'
 import { generateWss } from '@/stability/selas_wss'
 import  { diffusionMap } from '@/stability/utils'
 import ParamSlider from './ParamSlider.vue'
-import ParamSelect from './ParamSelect.vue'
 import ParamCheck from './ParamCheck.vue'
 import ImageGenerated from './ImageGenerated.vue'
 import ParamButton from './ParamButton.vue'
@@ -62,7 +61,6 @@ export default {
   name: 'MainDream',
   components: {
     ParamSlider,
-    ParamSelect,
     ParamCheck,
     ParamHost,
     ParamButton,
@@ -74,7 +72,7 @@ export default {
     return {
       generatedImage: '',
       word_phrase: '',
-      v_credits: 0
+      credits: 0
     }
   },
   methods: {
@@ -126,7 +124,7 @@ export default {
           }
       });
       const serverdata = await response.json();
-      this.v_credits = serverdata['credits'];
+      this.credits = serverdata['credits'];
     },
     updateImage(generatedImage) {
       console.log("updating image")

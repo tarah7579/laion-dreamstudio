@@ -17,7 +17,7 @@
             <div class="params params-desktop" >
                 <div>
                     <h3>Credits: </h3>
-                    <span><input disabled v-model="v_credits" /></span>
+                    <span><input disabled v-model="credits" /></span>
                     <h3>Word phrase:</h3>
                     
                     <span><input disabled v-model="word_phrase" /></span>
@@ -77,7 +77,7 @@ export default {
     data: function () {
         return {
             generatedImage: '',
-            v_credits: 0,
+            credits: 0,
             word_phrase: ''
         };
     },
@@ -92,7 +92,7 @@ export default {
                 }
             });
             const serverdata = await response.json();
-            this.v_credits = serverdata['credits'];
+            this.credits = serverdata['credits'];
         },
         newSession: async function () {
           const response = await fetch("api/user/new", {
@@ -212,6 +212,7 @@ export default {
         } else {
             await this.newSession();
         }
+        await this.getCredits();
     },
     watch: {
       word_phrase(new_word_phrase) {
