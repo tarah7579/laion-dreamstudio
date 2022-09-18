@@ -8,7 +8,7 @@
                 <div v-else>
                   <div class="main-page" >
                     <div class="generated-wrapper" >
-                      <h3>Annotate images to get credits.</h3>
+                      <h3 style="color:#F5FEFF">Annotate images to get credits.</h3>
                     </div>
                   </div>
                 </div>
