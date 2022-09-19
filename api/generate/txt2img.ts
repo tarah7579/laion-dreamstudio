@@ -20,7 +20,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
         if (credits == 0) { return res.status(402).json({ result: "no credits"});  }
         const connection = new WebSocket("wss://selas.dev/laion")
 
-        connection.onmessage = function(event) {
+        connection.onmessage = async function(event) {
             const data = JSON.parse(event.data)
             if ("jobId" in data) { 
                 console.log(data["jobId"]) 
@@ -36,8 +36,11 @@ export default async function (req: VercelRequest, res: VercelResponse) {
                     console.log('status: %s - generation in progress', status)
                 } else if (status == "completed") {
                     console.log('status: %s', status)
+                    await prisma.users.update({
+                        where: { id: user_id_query.id },
+                        data: { credits: { decrement: 1 } }
+                    });
                     return res.status(200).json( { result: "success", image: images[0] } );
-                    console.log('image: %s', images[0])
                 } else {
                     const result = "unknown status: " + status;
                     return res.status(503).json( { result: result } );
