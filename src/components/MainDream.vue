@@ -15,8 +15,8 @@
                   <ParamSlider @updateValue="updateParams"  param_name="Number of Images" param_desc="To generate multiple images from one prompt." :param_value="1" :param_max=9 :param_min=1 :param_step=1 />
                   <!-- <ParamSelect @updateValue="updateParams" param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." :param_value="k_lms" /> -->
                   <ParamCheck param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" />
-                  <ParamApiKey @updateValue="updateParams" param_name="apiKey" param_value="api key" />
-                  <ParamHost @updateValue="updateParams" param_name="host" param_value="https://grpc.stability.ai:443" />
+                  <!-- <ParamApiKey @updateValue="updateParams" param_name="apiKey" param_value="api key" />
+                  <ParamHost @updateValue="updateParams" param_name="host" param_value="https://grpc.stability.ai:443" /> -->
 
               </div>
             </div>
@@ -25,8 +25,8 @@
         <div class="prompt-wrapper prompt-wrapper-mobile" >
           <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
             <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
-            <ParamButton buttonText="Dream" @click="this.onGenerate"/>
-            <ParamButton buttonText="Dream WebSocket" @click="this.onGenerateWss"/>
+            <!-- <ParamButton buttonText="Dream" @click="this.onGenerate"/> -->
+            <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>
           </form>
         </div>
       </div>
@@ -36,15 +36,15 @@
 
 <script lang="ts">
 import  { generate } from '@/stability/stability'
-import { generateWss } from '@/stability/selas_wss'
+// import { generateWss } from '@/stability/selas_wss'
 import  { diffusionMap } from '@/stability/utils'
 import ParamSlider from './ParamSlider.vue'
 import ParamCheck from './ParamCheck.vue'
 import ImageGenerated from './ImageGenerated.vue'
 import ParamButton from './ParamButton.vue'
-import ParamApiKey from './ParamApiKey.vue'
+// import ParamApiKey from './ParamApiKey.vue'
 import ParamPrompt from './ParamPrompt.vue'
-import ParamHost from './ParamHost.vue'
+// import ParamHost from './ParamHost.vue'
 const params = {
   'Width': Number(512),
   'Height': Number(512),
@@ -62,10 +62,10 @@ export default {
   components: {
     ParamSlider,
     ParamCheck,
-    ParamHost,
+    // ParamHost,
     ParamButton,
     ParamPrompt,
-    ParamApiKey,
+    // ParamApiKey,
     ImageGenerated
   },
   data () {
@@ -90,30 +90,30 @@ export default {
       const serverdata = await response.json();
       this.word_phrase = serverdata['word_phrase'];
     },
-    onGenerate() {
-      const api = generate({
-      host: params['host'],
-      prompt: params['Input Prompt'],
-      width: params['Width'],
-      height: params['Height'],
-      cfgScale: params['Cfg Scale'],
-      steps: params['Steps'],
-      samples: params['Number of Images'],
-      diffusion: diffusionMap[params['Sampler']],
-      apiKey: params['apiKey'],
-      debug: true
-      })  
+    // onGenerate() {
+    //   const api = generate({
+    //   host: params['host'],
+    //   prompt: params['Input Prompt'],
+    //   width: params['Width'],
+    //   height: params['Height'],
+    //   cfgScale: params['Cfg Scale'],
+    //   steps: params['Steps'],
+    //   samples: params['Number of Images'],
+    //   diffusion: diffusionMap[params['Sampler']],
+    //   apiKey: params['apiKey'],
+    //   debug: true
+    //   })  
 
-      api.on('image', ({  binary }) => {
-          const base64 = "data:image/png;base64," + binary;
-          console.log(base64)
-          this.updateImage(base64);
-      })
+    //   api.on('image', ({  binary }) => {
+    //       const base64 = "data:image/png;base64," + binary;
+    //       console.log(base64)
+    //       this.updateImage(base64);
+    //   })
 
-      api.on('end', () => {
-      console.log('Generating Complete')
-      })
-    },
+    //   api.on('end', () => {
+    //   console.log('Generating Complete')
+    //   })
+    // },
     getCredits: async function () {
       const userData = {word_phrase: this.word_phrase }
       const response = await fetch("api/user/credits", {
