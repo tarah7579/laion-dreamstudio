@@ -22,13 +22,13 @@
                         <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
                             <div class="menu-item me-lg-1" style="margin-right: 15px !important;">
                                 <a aria-current="page" href="/dream" class="active router-link-exact-active menu-link">
-                                    <span class="menu-title">DreamStudio Lite</span>
+                                    <span class="menu-title">LAION OpenDream</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="d-flex align-items-stretch flex-shrink-0">
+                <!-- <div class="d-flex align-items-stretch flex-shrink-0">
                     <div class="d-flex align-items-stretch flex-shrink-0">
                         <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                             <span class="symbol symbol-30px symbol-md-40px el-tooltip__trigger el-tooltip__trigger">
@@ -36,7 +36,7 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
