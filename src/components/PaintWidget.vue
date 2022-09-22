@@ -138,6 +138,7 @@ export default {
                 word_phrase: this.word_phrase
             };
             const response = await this.uploadAnnotations(annotationData);
+            // TODO: Display error message if rate limited
             if (response != "rate limit") {
                 this.getAnnotation();
                 this.clear();

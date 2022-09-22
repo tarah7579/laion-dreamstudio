@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-12" style="line-height:42px;margin-top:15px;color:#fff;font-size:10px;">
                             <div style="line-height:16px;">
-                                <b>LAION OpenDream</b><br>
+                                <b>LAION</b><br>
                                 <i style="font-size:10px;">beta</i>
                             </div>
                         </div>

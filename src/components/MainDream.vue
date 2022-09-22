@@ -35,9 +35,9 @@
 </template>
 
 <script lang="ts">
-import  { generate } from '@/stability/stability'
+// import  { generate } from '@/stability/stability'
 // import { generateWss } from '@/stability/selas_wss'
-import  { diffusionMap } from '@/stability/utils'
+// import  { diffusionMap } from '@/stability/utils'
 import ParamSlider from './ParamSlider.vue'
 import ParamCheck from './ParamCheck.vue'
 import ImageGenerated from './ImageGenerated.vue'
