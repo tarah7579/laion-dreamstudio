@@ -1,0 +1,14 @@
+.avatar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: 1;
+	background-size: cover;
+	background-color: #e74c3d
+}
+
+.avatar .image-missing {
+	padding-top: 5%;
+	color: #fff;
+	line-height: 0
+}

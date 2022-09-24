@@ -22,14 +22,15 @@
             </div>
           </div>
         </div>
-        <div class="prompt-wrapper prompt-wrapper-mobile" >
-          <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
-            <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
-            <!-- <ParamButton buttonText="Dream" @click="this.onGenerate"/> -->
-            <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>
-          </form>
-        </div>
       </div>
+    </div>
+    <div class="prompt-wrapper prompt-wrapper-mobile editor-is-showing" >
+      <Editor></Editor>
+      <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
+        <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
+        <!-- <ParamButton buttonText="Dream" @click="this.onGenerate"/> -->
+        <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>
+      </form>
     </div>
   </div>
 </template>
@@ -42,6 +43,7 @@ import ParamSlider from './ParamSlider.vue'
 import ParamCheck from './ParamCheck.vue'
 import ImageGenerated from './ImageGenerated.vue'
 import ParamButton from './ParamButton.vue'
+import Editor from './Editor.vue'
 // import ParamApiKey from './ParamApiKey.vue'
 import ParamPrompt from './ParamPrompt.vue'
 // import ParamHost from './ParamHost.vue'
@@ -66,7 +68,8 @@ export default {
     ParamButton,
     ParamPrompt,
     // ParamApiKey,
-    ImageGenerated
+    ImageGenerated,
+    Editor
   },
   data () {
     return {
