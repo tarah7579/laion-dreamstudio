@@ -55,7 +55,7 @@
                                 <mask ref="renderMask" id="renderMask">
                                     <g viewBox="0 0 512 512" filter="url(#renderBlur0)">
                                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="#FFFFFF" opacity="0"></rect>
-                                        <path v-for="d in this.svg_paths" :key="d" :d="d" filter="url(#renderBlur0)" stroke-width="100" opacity="1" stroke="black" stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
+                                        <path v-for="d in this.svg_paths" :key="d.path" :d="d.path" filter="url(#renderBlur0)" :stroke-width="d.s" opacity="1" :stroke="d.m=='mask'?'black':'white'" stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
                                     </g>
                                 </mask>
                             </defs>
@@ -73,7 +73,7 @@
                                 <mask ref="displayMask" id="displayMask">
                                     <g viewBox="0 0 512 512">
                                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="#FFFFFF"></rect>
-                                        <path v-for="d in this.svg_paths" :key="d" :d="d" filter="url(#displayBlur0)" stroke-width="100" opacity="1" stroke="black" stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
+                                        <path v-for="d in this.svg_paths" :key="d.path" :d="d.path" filter="url(#displayBlur0)" :stroke-width="d.s" opacity="1" :stroke="d.m=='mask'?'black':'white'" stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
                                     </g>
                                 </mask>
                             </defs>
@@ -87,15 +87,15 @@
                   @mousemove="getMousePos($event)"
                   @mouseleave="getMousePos($event)"
                   @mouseenter="getMousePos($event)"
-                  style="cursor: crosshair;" >
+                  :style="cursorStyle" >
                     <Vue3DraggableResizable
                         :initW="w"
                         :initH="h"
                         v-model:x="x"
                         v-model:y="y"
                         v-model:active="active"
-                        :draggable="false"
-                        :resizable="false"
+                        :draggable="this.editor_mode=='move'?true:false"
+                        :resizable="this.editor_mode=='move'?true:false"
                         style="top: 0px; left: 0px; display: none; width: 512px; height: 512px;"
                         ></Vue3DraggableResizable>
                         <!---->
@@ -161,6 +161,8 @@ export default {
         brush_size: 100,
         brush_blur: 20,
         brush_strength: 100,
+        brush_mode: 'mask',
+        editor_mode: 'initial',
         image_opacity: 100,
         active: false,
         uploaded_image: '',
@@ -197,6 +199,10 @@ export default {
         },
         setVisible(control) {
             if (control == "mask") {
+                this.editor_mode = 'mask';
+                this.active = true;
+                this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
+                this.brush_mode = "mask";
                 this.image_strength_visible = false;
                 this.masking_controls_visible = true;
                 this.initial_image_button_class = "initial-image btn btn-secondary";
@@ -204,6 +210,9 @@ export default {
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-secondary";
             } else if (control == "initial") {
+                this.editor_mode = 'initial';
+                this.active = false;
+                this.$refs.svg_image_2.setAttribute('mask', '');
                 this.image_strength_visible = true;
                 this.masking_controls_visible = false;
                 this.initial_image_button_class = "initial-image btn btn-primary";
@@ -211,6 +220,10 @@ export default {
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-secondary";
             }  else if (control == "restore") {
+                this.editor_mode = 'restore';
+                this.active = true;
+                this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
+                this.brush_mode = "restore";
                 this.image_strength_visible = false;
                 this.masking_controls_visible = true;
                 this.initial_image_button_class = "initial-image btn btn-secondary";
@@ -218,6 +231,8 @@ export default {
                 this.restore_button_class = "btn btn-primary";
                 this.move_button_class = "btn btn-secondary";
             }  else if (control == "move") {
+                this.editor_mode = 'move';
+                this.active = false;
                 this.image_strength_visible = false;
                 this.masking_controls_visible = false;
                 this.initial_image_button_class = "initial-image btn btn-secondary";
@@ -234,7 +249,11 @@ export default {
                 this.points.push({
                     x: (this.x),
                     y: (this.y),
-                    j: 'L'
+                    j: 'L',
+                    s: this.brush_size,
+                    b: this.brush_blur,
+                    o: this.brush_strength,
+                    m: this.brush_mode
                 });
             }
         },
@@ -244,7 +263,13 @@ export default {
                 const M = this.points.filter((p) => p.j == 'M')[0];
                 const L = this.points.filter((p) => p.j == 'L');
                 const path = `M ${M.x} ${M.y} ${L.map((p) => `${p.j} ${p.x} ${p.y}`).join(' ')}`;
-                this.svg_paths.push(path);
+                this.svg_paths.push({
+                    path: path,
+                    s: this.brush_size,
+                    b: this.brush_blur,
+                    o: this.brush_strength,
+                    m: this.brush_mode
+                });
                 this.points = [];
                 console.log(this.svg_paths);
             }
@@ -259,7 +284,11 @@ export default {
             this.points.push({
                 x: (this.x),
                 y: (this.y),
-                j: 'M'
+                j: 'M',
+                s: this.brush_size,
+                b: this.brush_blur,
+                o: this.brush_strength,
+                m: this.brush_mode
             });
         },
         onFileChange(e) {
@@ -276,29 +305,29 @@ export default {
                 this.uploaded_image = e.target?.result;
                 this.$refs.svg_image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
                 this.$refs.svg_image_2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
-                
             }
             reader.readAsDataURL(file); 
         },
     },
     computed: {
         cursor() {
-            const A = `display: block;`,
-                E = `left: ${this.x}px; top: ${this.y}px;`,
+            const E = `left: ${this.x}px; top: ${this.y}px;`,
                 O = `width: ${this.brush_size}px;`,
                 F = `height: ${this.brush_size}px;`,
                 z = `filter: blur(${5*this.brush_blur/100}px);`,
                 j = `border-width: ${Math.max(5,10*this.brush_blur/100)}px;`;
-            return `${A} ${E} ${O} ${F} ${z} ${j}`
+            let display = `display: block;`;
+            if (this.editor_mode == "initial" || this.editor_mode == "move") {
+                display = `display: none;`;
+            }
+            return `${display} ${E} ${O} ${F} ${z} ${j}`
         },
-        cursorv3dr() {
-            const A = `display: block;`,
-                E = `left: ${this.x - (this.brush_size/2)}px; top: ${this.y - (this.brush_size/2)}px;`,
-                O = `width: ${this.brush_size}px;`,
-                F = `height: ${this.brush_size}px;`,
-                z = `filter: blur(${5*this.brush_blur/100}px);`,
-                j = `border-width: ${Math.max(5,10*this.brush_blur/100)}px;`;
-                return `${A} ${E} ${O} ${F} ${z} ${j}`
+        cursorStyle() {
+            let cursor = 'cursor: crosshair;';
+            if (this.editor_mode == "initial" || this.editor_mode == "move") {
+                cursor = `cursor: default;`;
+            }
+            return cursor;
         }
     },
     emits: ["closed", "preview-updated"],
