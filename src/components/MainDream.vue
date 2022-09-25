@@ -23,6 +23,7 @@
                   <div class="initial-image">
                     <h3>Image</h3>
                     <div class="editor-image" style="width: 75px; height: 75px; background: none;">
+                        <!-- <div v-if="image_preview != ''" class="editor-image-preview" style="background-image:"><svg :innerHTML="image_preview"></svg></div> -->
                         <div class="editor-image-preview" style="background-image:">None</div>
                     </div>
                     <div class="show-editor">
@@ -88,6 +89,7 @@ export default {
       word_phrase: '',
       credits: 0,
       show_editor: false,
+      image_preview: '',
     }
   },
   methods: {
@@ -105,6 +107,9 @@ export default {
       params[name] = input;
       console.log(params);
     },
+    // updatePreview(image) {
+    //   this.image_preview = image;
+    // },
     newSession: async function () {
       const response = await fetch("api/user/new", {
           method: "get",

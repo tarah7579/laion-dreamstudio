@@ -2,7 +2,7 @@ svg circle {
 	width: 100%;
 	height: 100%;
 	fill: #2d7b6c;
-	stroke: #03d8ae;
+	stroke: #FF5991;
 	stroke-width: 10;
 	stroke-linecap: round;
 	transform: translate(5px,5px)
@@ -233,9 +233,9 @@ svg circle:nth-child(2) {
 }
 
 .editor-wrapper .editor-display-wrapper .editor-display .controls-horizontal.controls-top .el-slider {
-	--el-color-primary: #03d8ae;
-	--el-border-color-light: #007c63;
-	--el-color-white: #005c49;
+	--el-color-primary: #FF4081;
+	--el-border-color-light: #B31B4D;
+	--el-color-white: #FF4081;
 	--el-text-color-placeholder: #666;
 	--el-slider-main-bg-color: var(--el-color-primary);
 	--el-slider-runway-bg-color: var(--el-border-color-light);
@@ -853,9 +853,9 @@ svg circle:nth-child(2) {
 }
 
 .el-slider {
-	--el-color-primary: #03d8ae;
-	--el-border-color-light: #007c63;
-	--el-color-white: #005c49;
+	--el-color-primary: #FF5991;
+	--el-border-color-light: #FF4081;
+	--el-color-white: #B31B4D;
 	--el-text-color-placeholder: #666;
 	--el-slider-main-bg-color: var(--el-color-primary);
 	--el-slider-runway-bg-color: var(--el-border-color-light);
@@ -947,7 +947,7 @@ div:hover ::-webkit-scrollbar-thumb,div:hover ::-webkit-scrollbar-thumb:hover {
 }
 
 .form-check.form-check-solid .form-check-input:checked {
-	background-color: #03d0a8
+	background-color: #B31B4D
 }
 
 .form-check.form-check-solid .form-check-input {

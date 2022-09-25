@@ -37,7 +37,7 @@
                         </defs>
                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="black"></rect>
                         <svg :x="move_x" :y="move_y" :width="move_w" :height="move_h" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
-                            <defs>
+                            <defs v-if="svg_paths.length > 0">
                                 <filter v-for="(item, index) in svg_paths" :key="index"
                                  :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
                                     <feGaussianBlur in="SourceGraphic" :stdDeviation="item.b/5"></feGaussianBlur>
@@ -72,9 +72,9 @@
                     </svg>
                 </div>
                 <div class="svg-wrapper" style="width: 512px; height: 512px; transform: scale(1);">
-                    <svg class="svg-display" width="512" height="512" overflow="hidden">
+                    <svg ref="svg_display" class="svg-display" width="512" height="512" overflow="hidden">
                         <svg :x="move_x" :y="move_y" :width="move_w" :height="move_h" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
-                            <defs>
+                            <defs v-if="svg_paths.length > 0">
                                 <filter v-for="(item, index) in svg_paths" :key="index"
                                  :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
                                     <feGaussianBlur in="SourceGraphic" :stdDeviation="item.b/5"></feGaussianBlur>
@@ -180,6 +180,7 @@ export default {
         brush_strength: 100,
         brush_mode: 'mask',
         editor_mode: 'initial',
+        last_editor_mode: 'initial',
         image_opacity: 100,
         active: false,
         uploaded_image: '',
@@ -192,6 +193,10 @@ export default {
         move_y: 0,
         move_w: 512,
         move_h: 512,
+        previous_move_x: 0,
+        previous_move_y: 0,
+        previous_move_w: 512,
+        previous_move_h: 512,
         path_index: 0,
         }
     },
@@ -222,9 +227,30 @@ export default {
         undo() {
             this.svg_paths.pop();
         },
+        resetMove() {
+            this.previous_move_x = this.move_x;
+            this.previous_move_y = this.move_y;
+            this.previous_move_w = this.move_w;
+            this.previous_move_h = this.move_h;
+            this.move_x = 0;
+            this.move_y = 0;
+            this.move_w = 512;
+            this.move_h = 512;
+        },
+        restoreMove() {
+            this.move_x = this.previous_move_x;
+            this.move_y = this.previous_move_y;
+            this.move_w = this.previous_move_w;
+            this.move_h = this.previous_move_h;
+        },
         setVisible(control) {
             if (control == "mask") {
+                if (this.last_editor_mode == "initial") {
+                    this.restoreMove();
+                }
+                //this.updatePreview();
                 this.editor_mode = 'mask';
+                this.last_editor_mode = 'mask';
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
                 this.brush_mode = "mask";
                 this.image_strength_visible = false;
@@ -234,13 +260,12 @@ export default {
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-secondary";
             } else if (control == "initial") {
+                this.resetMove();
+                //this.updatePreview();
                 this.editor_mode = 'initial';
+                this.last_editor_mode = 'initial';
                 this.$refs.svg_image_2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
                 this.$refs.svg_image_2.setAttribute('mask', '');
-                this.move_x = 0;
-                this.move_y = 0;
-                this.move_w = 512;
-                this.move_h = 512;
                 this.image_strength_visible = true;
                 this.masking_controls_visible = false;
                 this.initial_image_button_class = "initial-image btn btn-primary";
@@ -248,7 +273,12 @@ export default {
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-secondary";
             }  else if (control == "restore") {
+                if (this.last_editor_mode == "initial") {
+                    this.restoreMove();
+                }
+                //this.updatePreview();
                 this.editor_mode = 'restore';
+                this.last_editor_mode = 'restore';
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
                 this.brush_mode = "restore";
                 this.image_strength_visible = false;
@@ -258,7 +288,13 @@ export default {
                 this.restore_button_class = "btn btn-primary";
                 this.move_button_class = "btn btn-secondary";
             }  else if (control == "move") {
+                if (this.last_editor_mode == "initial") {
+                    this.restoreMove();
+                }
+                //this.updatePreview();
                 this.editor_mode = 'move';
+                this.last_editor_mode = 'move';
+                this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
                 this.image_strength_visible = false;
                 this.masking_controls_visible = false;
                 this.initial_image_button_class = "initial-image btn btn-secondary";
@@ -314,6 +350,7 @@ export default {
                     this.points = [];
                     this.path_index++;
                     console.log(this.svg_paths);
+                    //this.updatePreview();
                 }
             }
         },
@@ -367,7 +404,10 @@ export default {
         },
         filterId(pathName, index) {
             return `${pathName}${index}`;
-        }
+        },
+        // updatePreview() {
+        //     this.$emit("updatePreview", this.$refs.svg_display.outerHTML);
+        // },
     },
     computed: {
         cursor() {
@@ -389,20 +429,6 @@ export default {
             }
             return cursor;
         }
-    },
-    emits: ["closed", "preview-updated"],
-    setup(props, context) {
-        const { emit } = context;
-        const close = () => {
-            emit("closed");
-        };
-        const updatePreview = () => {
-            emit("preview-updated");
-        };
-        return {
-            close,
-            updatePreview
-        };
     },
     components: { ControlSlider }
 }
