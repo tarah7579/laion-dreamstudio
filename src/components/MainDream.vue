@@ -5,6 +5,10 @@
       <div class="row"  style="height: 100%;">
         <ImageGenerated :imageProp=generatedImage></ImageGenerated>
         <div class="col-auto col-lg-4 settings-wrapper" >
+          <div class="action-buttons-wrapper">
+            <button @click="closeEditor" v-if="show_editor" class="btn btn-primary settings settings-desktop is-active"><i class="bi bi-x-circle position-absolute active"></i></button>
+            <button v-else class="btn btn-primary settings settings-desktop is-active" ><i class="bi bi-gear-wide-connected position-absolute active"></i></button>
+          </div>
           <div class=""  style="height: 100%;">
             <div class="params params-desktop" >
               <div >
@@ -15,9 +19,15 @@
                   <ParamSlider @updateValue="updateParams"  param_name="Number of Images" param_desc="To generate multiple images from one prompt." :param_value="1" :param_max=9 :param_min=1 :param_step=1 />
                   <!-- <ParamSelect @updateValue="updateParams" param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." :param_value="k_lms" /> -->
                   <ParamCheck param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" />
-                  <!-- <ParamApiKey @updateValue="updateParams" param_name="apiKey" param_value="api key" />
-                  <ParamHost @updateValue="updateParams" param_name="host" param_value="https://grpc.stability.ai:443" /> -->
-
+                  <div class="initial-image">
+                    <h3>Image</h3>
+                    <div class="editor-image" style="width: 75px; height: 75px; background: none;">
+                        <div class="editor-image-preview" style="background-image:">None</div>
+                    </div>
+                    <div class="show-editor">
+                        <button @click="showEditor" class="btn btn-primary">Show Editor</button>
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -25,7 +35,7 @@
       </div>
     </div>
     <div class="prompt-wrapper prompt-wrapper-mobile editor-is-showing" >
-      <Editor></Editor>
+      <Editor v-if="show_editor"></Editor>
       <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
         <!-- <ParamButton buttonText="Dream" @click="this.onGenerate"/> -->
@@ -75,10 +85,21 @@ export default {
     return {
       generatedImage: '',
       word_phrase: '',
-      credits: 0
+      credits: 0,
+      show_editor: false,
     }
   },
   methods: {
+    showEditor() {
+      if (this.show_editor) {
+        this.show_editor = false
+      } else {
+        this.show_editor = true
+      }
+    },
+    closeEditor() {
+      this.show_editor = false
+    },
     updateParams(name, input) {
       params[name] = input;
       console.log(params);
