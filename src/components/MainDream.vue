@@ -3,7 +3,8 @@
     <div class="generated-wrapper" >
       <button class="btn btn-primary settings" ><i class="bi bi-gear-wide-connected position-absolute active" ></i><i class="bi bi-x-circle position-absolute" ></i></button>
       <div class="row"  style="height: 100%;">
-        <ImageGenerated :imageProp=generatedImage></ImageGenerated>
+        <ImageGenerated v-if="generatedImage != ''" :imageProp=generatedImage></ImageGenerated>
+        <ImageGenerated v-if="!show_editor && generatedImage == ''"  imageProp="/media/images/dream-empty.png"></ImageGenerated>
         <div class="col-auto col-lg-4 settings-wrapper" >
           <div class="action-buttons-wrapper">
             <button @click="closeEditor" v-if="show_editor" class="btn btn-primary settings settings-desktop is-active"><i class="bi bi-x-circle position-absolute active"></i></button>
