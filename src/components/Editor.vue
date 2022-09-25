@@ -36,10 +36,11 @@
                             </filter>
                         </defs>
                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="black"></rect>
-                        <svg x="0" y="0" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
+                        <svg :x="move_x" :y="move_y" :width="move_w" :height="move_h" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
                             <defs>
-                                <filter id="renderBlur0" x="-1000" y="-1000" width="3000" height="3000">
-                                    <feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur>
+                                <filter v-for="(item, index) in svg_paths" :key="index"
+                                 :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
+                                    <feGaussianBlur in="SourceGraphic" :stdDeviation="item.b/5"></feGaussianBlur>
                                 </filter>
                                 <filter id="renderImageNoise" x="0" y="0" width="100%" height="100%">
                                     <feTile in="SourceGraphic" x="50" y="50" width="100" height="100"></feTile>
@@ -55,29 +56,44 @@
                                 <mask ref="renderMask" id="renderMask">
                                     <g viewBox="0 0 512 512" filter="url(#renderBlur0)">
                                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="#FFFFFF" opacity="0"></rect>
-                                        <path v-for="d in this.svg_paths" :key="d.path" :d="d.path" filter="url(#renderBlur0)" :stroke-width="d.s" opacity="1" :stroke="d.m=='mask'?'black':'white'" stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
+                                        <path v-for="(item, index) in svg_paths" :key="index"
+                                         :d="item.path"
+                                         :filter="pathFilter('renderBlur', index)"
+                                         :stroke-width="item.s"
+                                         :opacity="item.o/100"
+                                         :stroke="item.m=='mask'?'black':'white'"
+                                         stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
                                     </g>
                                 </mask>
                             </defs>
-                            <image opacity="1" ref="svg_image" x="0" y="0" width="100%" height="100%" mask="url(#renderMask)" filter="url(#renderImageWhite)" preserveAspectRatio="xMidYMid slice"></image>
+                            <image opacity="0" ref="svg_image" x="0" y="0" width="100%" height="100%"
+                             mask="url(#renderMask)" filter="url(#renderImageWhite)" preserveAspectRatio="xMidYMid slice"></image>
                         </svg>
                     </svg>
                 </div>
                 <div class="svg-wrapper" style="width: 512px; height: 512px; transform: scale(1);">
                     <svg class="svg-display" width="512" height="512" overflow="hidden">
-                        <svg x="0" y="0" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
+                        <svg :x="move_x" :y="move_y" :width="move_w" :height="move_h" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
                             <defs>
-                                <filter id="displayBlur0" x="-1000" y="-1000" width="3000" height="3000">
-                                    <feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur>
+                                <filter v-for="(item, index) in svg_paths" :key="index"
+                                 :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
+                                    <feGaussianBlur in="SourceGraphic" :stdDeviation="item.b/5"></feGaussianBlur>
                                 </filter>
                                 <mask ref="displayMask" id="displayMask">
                                     <g viewBox="0 0 512 512">
                                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="#FFFFFF"></rect>
-                                        <path v-for="d in this.svg_paths" :key="d.path" :d="d.path" filter="url(#displayBlur0)" :stroke-width="d.s" opacity="1" :stroke="d.m=='mask'?'black':'white'" stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
+                                        <path v-for="(item, index) in svg_paths"
+                                        :key="index" :d="item.path"
+                                        :filter="pathFilter('displayBlur', index)"
+                                        :stroke-width="item.s"
+                                        :opacity="item.o/100"
+                                        :stroke="item.m=='mask'?'black':'white'"
+                                        stroke-linejoin="round" stroke-linecap="round" fill="none"></path>
                                     </g>
                                 </mask>
                             </defs>
-                            <image opacity="1" ref="svg_image_2" x="0" y="0" width="100%" height="100%" mask="url(#displayMask)" preserveAspectRatio="xMidYMid slice"></image>
+                            <image :opacity="this.image_opacity/100" ref="svg_image_2" x="0" y="0" width="100%" height="100%"
+                             mask="url(#displayMask)" preserveAspectRatio="xMidYMid slice"></image>
                         </svg>
                     </svg>
                 </div>
@@ -89,21 +105,22 @@
                   @mouseenter="getMousePos($event)"
                   :style="cursorStyle" >
                     <Vue3DraggableResizable
-                        :initW="w"
-                        :initH="h"
-                        v-model:x="x"
-                        v-model:y="y"
-                        v-model:active="active"
+                        :initW="move_w"
+                        :initH="move_h"
+                        v-model:x="move_x"
+                        v-model:y="move_y"
+                        v-model:w="move_w"
+                        v-model:h="move_h"
+                        :active="this.editor_mode=='move'?true:false"
                         :draggable="this.editor_mode=='move'?true:false"
                         :resizable="this.editor_mode=='move'?true:false"
-                        style="top: 0px; left: 0px; display: none; width: 512px; height: 512px;"
                         ></Vue3DraggableResizable>
                         <!---->
                     <div class="editor-cursor" :style="cursor"></div>
                     
                 </div>
                 <div class="controls-vertical controls-right">
-                    <a title="Undo" class="btn btn-secondary">
+                    <a title="Undo" @click="undo()" class="btn btn-secondary">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </a>
                 </div>
@@ -170,7 +187,12 @@ export default {
         start_x: 0,
         start_y: 0,
         points: [],
-        svg_paths: []
+        svg_paths: [],
+        move_x: 0,
+        move_y: 0,
+        move_w: 512,
+        move_h: 512,
+        path_index: 0,
         }
     },
     mounted() {
@@ -197,10 +219,12 @@ export default {
         updateImageOpacity(value) {
             this.image_opacity = value;
         },
+        undo() {
+            this.svg_paths.pop();
+        },
         setVisible(control) {
             if (control == "mask") {
                 this.editor_mode = 'mask';
-                this.active = true;
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
                 this.brush_mode = "mask";
                 this.image_strength_visible = false;
@@ -211,8 +235,12 @@ export default {
                 this.move_button_class = "btn btn-secondary";
             } else if (control == "initial") {
                 this.editor_mode = 'initial';
-                this.active = false;
+                this.$refs.svg_image_2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
                 this.$refs.svg_image_2.setAttribute('mask', '');
+                this.move_x = 0;
+                this.move_y = 0;
+                this.move_w = 512;
+                this.move_h = 512;
                 this.image_strength_visible = true;
                 this.masking_controls_visible = false;
                 this.initial_image_button_class = "initial-image btn btn-primary";
@@ -221,7 +249,6 @@ export default {
                 this.move_button_class = "btn btn-secondary";
             }  else if (control == "restore") {
                 this.editor_mode = 'restore';
-                this.active = true;
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
                 this.brush_mode = "restore";
                 this.image_strength_visible = false;
@@ -232,7 +259,6 @@ export default {
                 this.move_button_class = "btn btn-secondary";
             }  else if (control == "move") {
                 this.editor_mode = 'move';
-                this.active = false;
                 this.image_strength_visible = false;
                 this.masking_controls_visible = false;
                 this.initial_image_button_class = "initial-image btn btn-secondary";
@@ -242,11 +268,12 @@ export default {
             }
         },
         getMousePos(event) {
-            const rect = this.canvas.getBoundingClientRect();
-            this.x =  (event.clientX - rect.left);
-            this.y =  (event.clientY - rect.top);
-            if (this.is_drawing) {
-                this.points.push({
+            if (this.editor_mode == 'mask' || this.editor_mode == 'restore') {
+                const rect = this.canvas.getBoundingClientRect();
+                this.x =  (event.clientX - rect.left);
+                this.y =  (event.clientY - rect.top);
+                if (this.is_drawing) {
+                    this.points.push({
                     x: (this.x),
                     y: (this.y),
                     j: 'L',
@@ -254,42 +281,69 @@ export default {
                     b: this.brush_blur,
                     o: this.brush_strength,
                     m: this.brush_mode
-                });
+                    });
+                    const M = this.points.filter((p) => p.j == 'M')[0];
+                    const L = this.points.filter((p) => p.j == 'L');
+                    const path = `M ${M.x} ${M.y} ${L.map((p) => `${p.j} ${p.x} ${p.y}`).join(' ')}`;
+                    this.svg_paths[this.path_index] = {
+                        path: path,
+                        s: this.brush_size,
+                        b: this.brush_blur,
+                        o: this.brush_strength,
+                        m: this.brush_mode,
+                        f: this.image_opacity
+                    };
+                }
             }
         },
         stopDrawing(event) {
-            this.is_drawing = false;
-            if (this.points.length > 0) {
-                const M = this.points.filter((p) => p.j == 'M')[0];
-                const L = this.points.filter((p) => p.j == 'L');
-                const path = `M ${M.x} ${M.y} ${L.map((p) => `${p.j} ${p.x} ${p.y}`).join(' ')}`;
+            if (this.editor_mode == 'mask' || this.editor_mode == 'restore') {
+                this.is_drawing = false;
+                if (this.points.length > 0) {
+                    const M = this.points.filter((p) => p.j == 'M')[0];
+                    const L = this.points.filter((p) => p.j == 'L');
+                    const path = `M ${M.x} ${M.y} ${L.map((p) => `${p.j} ${p.x} ${p.y}`).join(' ')}`;
+                    this.svg_paths[this.path_index] = {
+                        path: path,
+                        s: this.brush_size,
+                        b: this.brush_blur,
+                        o: this.brush_strength,
+                        m: this.brush_mode,
+                        f: this.image_opacity
+                    };
+                    this.points = [];
+                    this.path_index++;
+                    console.log(this.svg_paths);
+                }
+            }
+        },
+        startDrawing(event) {
+            if (this.editor_mode == 'mask' || this.editor_mode == 'restore') {
+                const rect = this.canvas.getBoundingClientRect();
+                this.x =  (event.clientX - rect.left);
+                this.y =  (event.clientY - rect.top);
+                this.is_drawing = true;
+                this.start_x = this.x;
+                this.start_y = this.x;
+                this.points.push({
+                    x: (this.x),
+                    y: (this.y),
+                    j: 'M',
+                    s: this.brush_size,
+                    b: this.brush_blur,
+                    o: this.brush_strength,
+                    m: this.brush_mode
+                    });
+                const path = `M ${this.x} ${this.y}`;
                 this.svg_paths.push({
                     path: path,
                     s: this.brush_size,
                     b: this.brush_blur,
                     o: this.brush_strength,
-                    m: this.brush_mode
+                    m: this.brush_mode,
+                    f: this.image_opacity
                 });
-                this.points = [];
-                console.log(this.svg_paths);
             }
-        },
-        startDrawing(event) {
-            const rect = this.canvas.getBoundingClientRect();
-            this.x =  (event.clientX - rect.left);
-            this.y =  (event.clientY - rect.top);
-            this.is_drawing = true;
-            this.start_x = this.x;
-            this.start_y = this.x;
-            this.points.push({
-                x: (this.x),
-                y: (this.y),
-                j: 'M',
-                s: this.brush_size,
-                b: this.brush_blur,
-                o: this.brush_strength,
-                m: this.brush_mode
-            });
         },
         onFileChange(e) {
             const files = e.target.files || e.dataTransfer.files
@@ -308,6 +362,12 @@ export default {
             }
             reader.readAsDataURL(file); 
         },
+        pathFilter(pathName, index) {
+            return `url(#${pathName}${index})`;
+        },
+        filterId(pathName, index) {
+            return `${pathName}${index}`;
+        }
     },
     computed: {
         cursor() {
