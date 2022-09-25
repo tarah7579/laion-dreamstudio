@@ -1,18 +1,8 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-// import '@/assets/css/app.css'
-// import '@/assets/css/app2.css'
-// import '@/assets/css/app3.css'
-import '/assets/css/index.css'
-import '/assets/css/Avatar.css'
-import '/assets/css/Dream.css'
-import '/assets/css/Layout.css'
-import '/assets/css/LeftMenu.css'
 import  { createRouter, createWebHashHistory } from 'vue-router'
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
-
-
 
 import App from "@/App.vue";
 

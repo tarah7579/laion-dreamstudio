@@ -1810,7 +1810,7 @@ div.pswp__img--placeholder,.pswp__img--with-bg {
 }
 
 .jv-container .jv-toggle {
-	background-image: url(/assets/icon.svg);
+	background-image: url(/media/assets/icon.svg);
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center center;
@@ -2108,7 +2108,7 @@ div.pswp__img--placeholder,.pswp__img--with-bg {
 @font-face {
 	font-display: block;
 	font-family: bootstrap-icons;
-	src: url(/assets/bootstrap-icons.woff2) format("woff2"),url(/assets/bootstrap-icons.woff) format("woff")
+	src: url(/media/assets/bootstrap-icons.woff2) format("woff2"),url(/media/assets/bootstrap-icons.woff) format("woff")
 }
 
 .bi:before,[class^=bi-]:before,[class*=" bi-"]:before {
@@ -23410,7 +23410,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:"Font Awesome 5 Brands";font-style:normal;font-weight:400;font-display:block;src:url(/assets/fa-brands-400.eot);src:url(/assets/fa-brands-400.eot?#iefix) format("embedded-opentype"),url(/assets/fa-brands-400.woff2) format("woff2"),url(/assets/fa-brands-400.woff) format("woff"),url(/assets/fa-brands-400.ttf) format("truetype"),url(/assets/fa-brands-400.svg#fontawesome) format("svg")
+	font-family:"Font Awesome 5 Brands";font-style:normal;font-weight:400;font-display:block;src:url(/media/assets/fa-brands-400.eot);src:url(/media/assets/fa-brands-400.eot?#iefix) format("embedded-opentype"),url(/media/assets/fa-brands-400.woff2) format("woff2"),url(/media/assets/fa-brands-400.woff) format("woff"),url(/media/assets/fa-brands-400.ttf) format("truetype"),url(/media/assets/fa-brands-400.svg#fontawesome) format("svg")
 }
 
 .fab {
@@ -23418,7 +23418,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:"Font Awesome 5 Free";font-style:normal;font-weight:400;font-display:block;src:url(/assets/fa-regular-400.eot);src:url(/assets/fa-regular-400.eot?#iefix) format("embedded-opentype"),url(/assets/fa-regular-400.woff2) format("woff2"),url(/assets/fa-regular-400.woff) format("woff"),url(/assets/fa-regular-400.ttf) format("truetype"),url(/assets/fa-regular-400.svg#fontawesome) format("svg")
+	font-family:"Font Awesome 5 Free";font-style:normal;font-weight:400;font-display:block;src:url(/media/assets/fa-regular-400.eot);src:url(/media/assets/fa-regular-400.eot?#iefix) format("embedded-opentype"),url(/media/assets/fa-regular-400.woff2) format("woff2"),url(/media/assets/fa-regular-400.woff) format("woff"),url(/media/assets/fa-regular-400.ttf) format("truetype"),url(/media/assets/fa-regular-400.svg#fontawesome) format("svg")
 }
 
 .fab,.far {
@@ -23426,7 +23426,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:"Font Awesome 5 Free";font-style:normal;font-weight:900;font-display:block;src:url(/assets/fa-solid-900.eot);src:url(/assets/fa-solid-900.eot?#iefix) format("embedded-opentype"),url(/assets/fa-solid-900.woff2) format("woff2"),url(/assets/fa-solid-900.woff) format("woff"),url(/assets/fa-solid-900.ttf) format("truetype"),url(/assets/fa-solid-900.svg#fontawesome) format("svg")
+	font-family:"Font Awesome 5 Free";font-style:normal;font-weight:900;font-display:block;src:url(/media/assets/fa-solid-900.eot);src:url(/media/assets/fa-solid-900.eot?#iefix) format("embedded-opentype"),url(/media/assets/fa-solid-900.woff2) format("woff2"),url(/media/assets/fa-solid-900.woff) format("woff"),url(/media/assets/fa-solid-900.ttf) format("truetype"),url(/media/assets/fa-solid-900.svg#fontawesome) format("svg")
 }
 
 .fa,.far,.fas {
@@ -23438,7 +23438,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:socicon;src:url(/assets/socicon.eot);src:url(/assets/socicon.eot?#iefix) format("embedded-opentype"),url(/assets/socicon.woff) format("woff"),url(/assets/socicon.ttf) format("truetype"),url(/assets/socicon.svg#socicon) format("svg");font-weight:400;font-style:normal
+	font-family:socicon;src:url(/media/assets/socicon.eot);src:url(/media/assets/socicon.eot?#iefix) format("embedded-opentype"),url(/media/assets/socicon.woff) format("woff"),url(/media/assets/socicon.ttf) format("truetype"),url(/media/assets/socicon.svg#socicon) format("svg");font-weight:400;font-style:normal
 }
 
 [data-icon]:before {
@@ -29947,7 +29947,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:Line Awesome Brands;font-style:normal;font-weight:400;font-display:auto;src:url(/assets/la-brands-400.eot);src:url(/assets/la-brands-400.eot?#iefix) format("embedded-opentype"),url(/assets/la-brands-400.woff2) format("woff2"),url(/assets/la-brands-400.woff) format("woff"),url(/assets/la-brands-400.ttf) format("truetype"),url(/assets/la-brands-400.svg#lineawesome) format("svg")
+	font-family:Line Awesome Brands;font-style:normal;font-weight:400;font-display:auto;src:url(/media/assets/la-brands-400.eot);src:url(/media/assets/la-brands-400.eot?#iefix) format("embedded-opentype"),url(/media/assets/la-brands-400.woff2) format("woff2"),url(/media/assets/la-brands-400.woff) format("woff"),url(/media/assets/la-brands-400.ttf) format("truetype"),url(/media/assets/la-brands-400.svg#lineawesome) format("svg")
 }
 
 .lab {
@@ -29955,7 +29955,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:Line Awesome Free;font-style:normal;font-weight:400;font-display:auto;src:url(/assets/la-regular-400.eot);src:url(/assets/la-regular-400.eot?#iefix) format("embedded-opentype"),url(/assets/la-regular-400.woff2) format("woff2"),url(/assets/la-regular-400.woff) format("woff"),url(/assets/la-regular-400.ttf) format("truetype"),url(/assets/la-regular-400.svg#lineawesome) format("svg")
+	font-family:Line Awesome Free;font-style:normal;font-weight:400;font-display:auto;src:url(/media/assets/la-regular-400.eot);src:url(/media/assets/la-regular-400.eot?#iefix) format("embedded-opentype"),url(/media/assets/la-regular-400.woff2) format("woff2"),url(/media/assets/la-regular-400.woff) format("woff"),url(/media/assets/la-regular-400.ttf) format("truetype"),url(/media/assets/la-regular-400.svg#lineawesome) format("svg")
 }
 
 .lar {
@@ -29964,7 +29964,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 }
 
 @font-face {
-	font-family:Line Awesome Free;font-style:normal;font-weight:900;font-display:auto;src:url(/assets/la-solid-900.eot);src:url(/assets/la-solid-900.eot?#iefix) format("embedded-opentype"),url(/assets/la-solid-900.woff2) format("woff2"),url(/assets/la-solid-900.woff) format("woff"),url(/assets/la-solid-900.ttf) format("truetype"),url(/assets/la-solid-900.svg#lineawesome) format("svg")
+	font-family:Line Awesome Free;font-style:normal;font-weight:900;font-display:auto;src:url(/media/assets/la-solid-900.eot);src:url(/media/assets/la-solid-900.eot?#iefix) format("embedded-opentype"),url(/media/assets/la-solid-900.woff2) format("woff2"),url(/media/assets/la-solid-900.woff) format("woff"),url(/media/assets/la-solid-900.ttf) format("truetype"),url(/media/assets/la-solid-900.svg#lineawesome) format("svg")
 }
 
 .la,.las {
@@ -49502,7 +49502,7 @@ code.language-css .token.selector>.token.class,code.language-css .token.selector
 }
 
 @font-face {
-	font-family:fonticons;src:url(/assets/fonticons.ttf) format("truetype"),url(/assets/fonticons.eot#iefix) format("embedded-opentype"),url(/assets/fonticons.svg#fonticons) format("svg")
+	font-family:fonticons;src:url(/media/assets/fonticons.ttf) format("truetype"),url(/media/assets/fonticons.eot#iefix) format("embedded-opentype"),url(/media/assets/fonticons.svg#fonticons) format("svg")
 }
 
 i[class^=fonticon-]:before,i[class*=" fonticon-"]:before {
