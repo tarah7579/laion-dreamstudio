@@ -125,30 +125,6 @@ export default {
       const serverdata = await response.json();
       this.word_phrase = serverdata['word_phrase'];
     },
-    // onGenerate() {
-    //   const api = generate({
-    //   host: params['host'],
-    //   prompt: params['Input Prompt'],
-    //   width: params['Width'],
-    //   height: params['Height'],
-    //   cfgScale: params['Cfg Scale'],
-    //   steps: params['Steps'],
-    //   samples: params['Number of Images'],
-    //   diffusion: diffusionMap[params['Sampler']],
-    //   apiKey: params['apiKey'],
-    //   debug: true
-    //   })  
-
-    //   api.on('image', ({  binary }) => {
-    //       const base64 = "data:image/png;base64," + binary;
-    //       console.log(base64)
-    //       this.updateImage(base64);
-    //   })
-
-    //   api.on('end', () => {
-    //   console.log('Generating Complete')
-    //   })
-    // },
     getCredits: async function () {
       const userData = {word_phrase: this.word_phrase }
       const response = await fetch("api/user/credits", {
@@ -165,33 +141,55 @@ export default {
       console.log("updating image")
       this.generatedImages.push(generatedImage);
     },
-    async onGenerateWss() {
-      const promptData = {
-      prompt: this.params['Input Prompt'],
-      width: this.params['Width'],
-      height: this.params['Height'],
-      cfgScale: this.params['Cfg Scale'],
-      steps: this.params['Steps'],
-      samples: this.params['Number of Images'],
-      word_phrase: localStorage.word_phrase
-      }
-      const response = await fetch("api/generate/txt2img", {
-          method: "post",
-          body: JSON.stringify(promptData),
-          headers: {
-              "Content-Type": "application/json; charset=UTF-8"
-          }
-      });
-      const serverdata = await response.json();
-      if (serverdata['result'] == "success") {
-          this.generatedImage = serverdata['image'];
-      }
-      else if (serverdata['result'] == "no credits") {
-          console.log("no credits");
-      }
-      else {
-          console.log(serverdata['result']);
-      }
+    onGenerateWss() {
+      
+      this.generateWss({
+        host: "wss://selas.dev/laion",
+        prompt: this.params['Input Prompt'],
+        width: this.params['Width'],
+        height: this.params['Height'],
+        cfgScale: this.params['Cfg Scale'],
+        steps: this.params['Steps'],
+        samples: this.params['Number of Images'],
+      })
+    },
+    generateWss(params) {
+      console.log("Connecting")
+    const connection = new WebSocket(params.host)
+
+    connection.onmessage = function(event) {
+        const data = JSON.parse(event.data)
+        if ("jobId" in data) { 
+            console.log(data["jobId"]) 
+        } 
+        else if ("status" in data && "queue" in data && "images" in data && "nPreviousJobs" in data) {
+            const status = data["status"]
+            const queue = data["queue"]
+            const images = data["images"]
+            const nPreviousJobs = data["nPreviousJobs"]
+            if (status == "pending") {
+                console.log('status: %s - queue position: %d', status, queue)
+            } else if (status == "accepted") {
+                console.log('status: %s - generation in progress', status)
+            } else if (status == "completed") {
+                console.log('status: %s', status)
+                console.log('image: %s', images[0])
+            } else {
+                console.log('unknown status: %s', status)
+            }
+        }
+        else {
+            console.log("unknown api response:", JSON.stringify(data))
+        }
+
+    }
+    connection.onopen = function(event) {
+        console.log("Connected")
+        const message = {"prompt": params.prompt}
+        const message_json = JSON.stringify(message)
+        console.log("Sending" + message_json)
+        connection.send(message_json)
+    }
     }
   },
 }
