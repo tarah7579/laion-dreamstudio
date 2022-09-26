@@ -100700,7 +100700,7 @@ code:not([class*=language-]) {
 @media (min-width: 992px) {
 	main,span,ol,ul,pre,div {
 		scrollbar-width: thin;
-		scrollbar-color: #e9ecef transparent
+		scrollbar-color: #B31B4D transparent
 	}
 
 	main::-webkit-scrollbar,span::-webkit-scrollbar,ol::-webkit-scrollbar,ul::-webkit-scrollbar,pre::-webkit-scrollbar,div::-webkit-scrollbar {
@@ -100709,7 +100709,7 @@ code:not([class*=language-]) {
 	}
 
 	main::-webkit-scrollbar-thumb,span::-webkit-scrollbar-thumb,ol::-webkit-scrollbar-thumb,ul::-webkit-scrollbar-thumb,pre::-webkit-scrollbar-thumb,div::-webkit-scrollbar-thumb {
-		background-color: #e9ecef
+		background-color: #B31B4D
 	}
 
 	main:hover,span:hover,ol:hover,ul:hover,pre:hover,div:hover {

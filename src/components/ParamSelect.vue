@@ -8,7 +8,8 @@
                 class="el-input" 
                 size="large" 
                 :placeholder="v_select" 
-                default-first-option>
+                default-first-option
+                style="height: 45px; display: inline-block; width: calc(80% - 80px); font-size: 14px;">
             <el-option
                 v-for="item in options"
                 :key="item.value"

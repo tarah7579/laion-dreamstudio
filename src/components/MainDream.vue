@@ -16,9 +16,9 @@
                   <ParamSlider @updateValue="updateParams"  param_name="Width" param_desc="The width of the generated image." :param_value=512 :param_max=1024 :param_min=512 :param_step=64 />
                   <ParamSlider @updateValue="updateParams"  param_name="Height" param_desc="The height of the generated image." :param_value=512 :param_max=1024 :param_min=512 :param_step=64 />
                   <ParamSlider @updateValue="updateParams"  param_name="Cfg Scale" param_desc="Cfg scale adjusts how much the image will be like your prompt. Higher values keep your image closer to your prompt." :param_value=7 :param_max=20 :param_min=0 :param_step=1 />
-                  <ParamSlider @updateValue="updateParams"  param_name="Steps" param_desc="How many steps to spend generating (diffusing) your image." :param_value="50" :param_max=150 :param_min=10 :param_step=1 />
-                  <ParamSlider @updateValue="updateParams"  param_name="Number of Images" param_desc="To generate multiple images from one prompt." :param_value="1" :param_max=9 :param_min=1 :param_step=1 />
-                  <!-- <ParamSelect @updateValue="updateParams" param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." :param_value="k_lms" /> -->
+                  <ParamSlider @updateValue="updateParams"  param_name="Steps" param_desc="How many steps to spend generating (diffusing) your image." :param_value=50 :param_max=150 :param_min=10 :param_step=1 />
+                  <ParamSlider @updateValue="updateParams"  param_name="Number of Images" param_desc="To generate multiple images from one prompt." :param_value=1 :param_max=9 :param_min=1 :param_step=1 />
+                  <ParamSelect @updateValue="updateParams"  param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." param_value="k_lms" />
                   <ParamCheck param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" />
                   <div class="initial-image">
                     <h3>Image</h3>
@@ -40,7 +40,6 @@
       <Editor v-if="show_editor"></Editor>
       <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
-        <!-- <ParamButton buttonText="Dream" @click="this.onGenerate"/> -->
         <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>
       </form>
     </div>
@@ -48,38 +47,31 @@
 </template>
 
 <script lang="ts">
-// import  { generate } from '@/stability/stability'
-// import { generateWss } from '@/stability/selas_wss'
-// import  { diffusionMap } from '@/stability/utils'
 import ParamSlider from './ParamSlider.vue'
 import ParamCheck from './ParamCheck.vue'
 import ImageGenerated from './ImageGenerated.vue'
 import ParamButton from './ParamButton.vue'
 import Editor from './Editor.vue'
-// import ParamApiKey from './ParamApiKey.vue'
+import ParamSelect from './ParamSelect.vue'
 import ParamPrompt from './ParamPrompt.vue'
-// import ParamHost from './ParamHost.vue'
 const params = {
   'Width': Number(512),
   'Height': Number(512),
   'Cfg Scale': Number(7),
   'Steps': Number(50),
   'Number of Images': Number(1),
-  'Sampler': 7,
+  'Sampler': String('k_lms'),
   'Seed': String(''),
-  'Input Prompt': String(''),
-  'apiKey': String(''),
-  'host': String('https://grpc.stability.ai:443')
+  'Input Prompt': String('')
 }
 export default {
   name: 'MainDream',
   components: {
+    ParamSelect,
     ParamSlider,
     ParamCheck,
-    // ParamHost,
     ParamButton,
     ParamPrompt,
-    // ParamApiKey,
     ImageGenerated,
     Editor
   },
