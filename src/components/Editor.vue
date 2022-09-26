@@ -125,12 +125,12 @@
                     </a>
                 </div>
                 <div class="controls-horizontal controls-bottom">
-                    <button class="btn btn-secondary">
+                    <button @click="closeEditor()" class="btn btn-secondary">
                         <i class="bi bi-arrow-left"></i>Back</button>
-                    <a href="/faq#photo-editor" class="">
+                    <!-- <a href="/faq#photo-editor" class="">
                         <button class="btn btn-secondary">
                             <i class="bi bi-question-circle"></i>Guide</button>
-                    </a>
+                    </a> -->
                     <button  @click="$refs.file.click()" class="btn btn-primary">
                         <i class="bi bi-upload"></i>Upload Image</button>
                     <input type="file" ref="file" v-on:change="onFileChange($event)" id="image-upload">
@@ -331,6 +331,9 @@ export default {
                     };
                 }
             }
+        },
+        closeEditor() {
+            this.$emit('closeEditor');
         },
         stopDrawing(event) {
             if (this.editor_mode == 'mask' || this.editor_mode == 'restore') {

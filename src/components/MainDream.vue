@@ -3,7 +3,7 @@
     <div class="generated-wrapper" >
       <button class="btn btn-primary settings" ><i class="bi bi-gear-wide-connected position-absolute active" ></i><i class="bi bi-x-circle position-absolute" ></i></button>
       <div class="row"  style="height: 100%;">
-        <div class="image-area"  :style="imageArea">
+        <div v-if="!show_editor" class="image-area"  :style="imageArea">
         <ImageGenerated v-for="index in this.params['Number of Images']" :key="index" :imageProp=generatedImages[index]></ImageGenerated>
         </div>
         <div class="col-auto col-lg-4 settings-wrapper" >
@@ -37,9 +37,9 @@
         </div>
       </div>
     </div>
-    <div class="prompt-wrapper prompt-wrapper-mobile editor-is-showing" >
-      <Editor v-if="show_editor"></Editor>
-      <form  id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
+    <div :class="promptWrapper" >
+      <Editor @closeEditor="closeEditor" v-if="show_editor"></Editor>
+      <form  v-if="!show_editor" id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
         <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>
       </form>
@@ -68,14 +68,23 @@ export default {
   },
   computed: {
     imageArea() {
-      const numImages = this.params['Number of Images']
-      let style = ''
+      const numImages = this.params['Number of Images'];
+      let style = '';
       if (numImages <= 4) {
-        style = 'display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto;'
+        style = 'display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto;';
       } else if (numImages >= 5) {
-        style = 'display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto;'
+        style = 'display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto;';
       }
-      return style
+      return style;
+    },
+    promptWrapper() {
+      let style = '';
+      if (this.show_editor) {
+        style = 'prompt-wrapper prompt-wrapper-mobile editor-is-showing';
+      } else {
+        style = 'prompt-wrapper prompt-wrapper-mobile';
+      }
+      return style;
     }
   },
   data () {
