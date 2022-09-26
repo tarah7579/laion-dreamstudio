@@ -19,7 +19,7 @@
                   <ParamSlider @updateValue="updateParams"  param_name="Steps" param_desc="How many steps to spend generating (diffusing) your image." :param_value=50 :param_max=150 :param_min=10 :param_step=1 />
                   <ParamSlider @updateValue="updateParams"  param_name="Number of Images" param_desc="To generate multiple images from one prompt." :param_value=1 :param_max=9 :param_min=1 :param_step=1 />
                   <ParamSelect @updateValue="updateParams"  param_name="Sampler" param_desc="The diffusion sampling method. Default is 'k_lms'." param_value="k_lms" />
-                  <ParamCheck param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" />
+                  <ParamCheck  @updateValue="updateParams"  param_name="Seed" param_desc="The seed used to generate your image. Enable to manually set a seed." param_value="" :param_random_seed=true />
                   <div class="initial-image">
                     <h3>Image</h3>
                     <div class="editor-image" style="width: 75px; height: 75px; background: none;">
@@ -62,6 +62,7 @@ const params = {
   'Number of Images': Number(1),
   'Sampler': String('k_lms'),
   'Seed': String(''),
+  'Random Seed': Boolean(true),
   'Input Prompt': String('')
 }
 export default {
