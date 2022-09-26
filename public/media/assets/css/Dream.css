@@ -504,7 +504,9 @@ svg circle:nth-child(2) {
 
 .generated-wrapper .image-area {
 	transition: all .3s ease .3s;
-	width: calc(100% - 27vw)
+	width: 50%;
+	height: 100%;
+	align-items: center;
 }
 
 @media (max-width: 991px) {
@@ -553,7 +555,6 @@ svg circle:nth-child(2) {
 
 .generated_image .generated_image_wrap {
 	width: 100%;
-	height: calc(100vh - 300px);
 	cursor: pointer;
 	position: relative
 }

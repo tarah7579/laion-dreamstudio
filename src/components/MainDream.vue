@@ -3,8 +3,9 @@
     <div class="generated-wrapper" >
       <button class="btn btn-primary settings" ><i class="bi bi-gear-wide-connected position-absolute active" ></i><i class="bi bi-x-circle position-absolute" ></i></button>
       <div class="row"  style="height: 100%;">
-        <ImageGenerated v-if="generatedImage != ''" :imageProp=generatedImage></ImageGenerated>
-        <ImageGenerated v-if="!show_editor && generatedImage == ''"  imageProp="/media/images/dream-empty.png"></ImageGenerated>
+        <div class="image-area"  :style="imageArea">
+        <ImageGenerated v-for="index in this.params['Number of Images']" :key="index" :imageProp=generatedImages[index]></ImageGenerated>
+        </div>
         <div class="col-auto col-lg-4 settings-wrapper" >
           <div class="action-buttons-wrapper">
             <button @click="closeEditor" v-if="show_editor" class="btn btn-primary settings settings-desktop is-active"><i class="bi bi-x-circle position-absolute active"></i></button>
@@ -54,17 +55,6 @@ import ParamButton from './ParamButton.vue'
 import Editor from './Editor.vue'
 import ParamSelect from './ParamSelect.vue'
 import ParamPrompt from './ParamPrompt.vue'
-const params = {
-  'Width': Number(512),
-  'Height': Number(512),
-  'Cfg Scale': Number(7),
-  'Steps': Number(50),
-  'Number of Images': Number(1),
-  'Sampler': String('k_lms'),
-  'Seed': String(''),
-  'Random Seed': Boolean(true),
-  'Input Prompt': String('')
-}
 export default {
   name: 'MainDream',
   components: {
@@ -76,13 +66,35 @@ export default {
     ImageGenerated,
     Editor
   },
+  computed: {
+    imageArea() {
+      const numImages = this.params['Number of Images']
+      let style = ''
+      if (numImages <= 4) {
+        style = 'display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto;'
+      } else if (numImages >= 5) {
+        style = 'display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto;'
+      }
+      return style
+    }
+  },
   data () {
     return {
-      generatedImage: '',
+      generatedImages: [],
       word_phrase: '',
       credits: 0,
       show_editor: false,
       image_preview: '',
+      params: {
+        'Width': 512,
+        'Height': 512,
+        'Cfg Scale': 7,
+        'Steps': 50,
+        'Number of Images': 1,
+        'Sampler': 'k_lms',
+        'Seed': '',
+        'Input Prompt': ''
+      }
     }
   },
   methods: {
@@ -97,8 +109,8 @@ export default {
       this.show_editor = false
     },
     updateParams(name, input) {
-      params[name] = input;
-      console.log(params);
+      this.params[name] = input;
+      console.log(this.params);
     },
     // updatePreview(image) {
     //   this.image_preview = image;
@@ -151,16 +163,16 @@ export default {
     },
     updateImage(generatedImage) {
       console.log("updating image")
-      this.generatedImage = generatedImage
+      this.generatedImages.push(generatedImage);
     },
     async onGenerateWss() {
       const promptData = {
-      prompt: params['Input Prompt'],
-      width: params['Width'],
-      height: params['Height'],
-      cfgScale: params['Cfg Scale'],
-      steps: params['Steps'],
-      samples: params['Number of Images'],
+      prompt: this.params['Input Prompt'],
+      width: this.params['Width'],
+      height: this.params['Height'],
+      cfgScale: this.params['Cfg Scale'],
+      steps: this.params['Steps'],
+      samples: this.params['Number of Images'],
       word_phrase: localStorage.word_phrase
       }
       const response = await fetch("api/generate/txt2img", {
@@ -181,6 +193,6 @@ export default {
           console.log(serverdata['result']);
       }
     }
-  }
+  },
 }
 </script>
