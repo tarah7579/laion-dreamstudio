@@ -4,7 +4,8 @@
       <button class="btn btn-primary settings" ><i class="bi bi-gear-wide-connected position-absolute active" ></i><i class="bi bi-x-circle position-absolute" ></i></button>
       <div class="row"  style="height: 100%;">
         <div v-if="!show_editor" class="image-area"  :style="imageArea">
-        <ImageGenerated v-for="index in this.params['Number of Images']" :key="index" :imageProp=generatedImages[index]></ImageGenerated>
+          <slot v-if="generatedImages.length > 0"><ImageGenerated v-for="(image, index) in generatedImages" :key="index" :imageProp=image></ImageGenerated></slot>
+          <slot v-else><ImageGenerated v-for="index in this.params['Number of Images']" :key="index"></ImageGenerated></slot>
         </div>
         <div class="col-auto col-lg-4 settings-wrapper" >
           <div class="action-buttons-wrapper">
@@ -14,6 +15,13 @@
           <div class=""  style="height: 100%;">
             <div class="params params-desktop" >
               <div >
+                  <div v-if="job_status.status != ''" id="job_status">
+                    <h3>Job Status</h3>
+                    <div className="param-slider">
+                      <div className="param-desc">{{job_status.status}}</div>
+                      <div className="param-desc" v-if="job_status.queue != 0">{{job_status.queue}}</div>
+                    </div>
+                  </div>
                   <ParamSlider @updateValue="updateParams"  param_name="Width" param_desc="The width of the generated image." :param_value=512 :param_max=1024 :param_min=512 :param_step=64 />
                   <ParamSlider @updateValue="updateParams"  param_name="Height" param_desc="The height of the generated image." :param_value=512 :param_max=1024 :param_min=512 :param_step=64 />
                   <ParamSlider @updateValue="updateParams"  param_name="Cfg Scale" param_desc="Cfg scale adjusts how much the image will be like your prompt. Higher values keep your image closer to your prompt." :param_value=7 :param_max=20 :param_min=0 :param_step=1 />
@@ -37,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div :class="promptWrapper" >
+    <div :class="promptWrapper">
       <Editor @closeEditor="closeEditor" v-if="show_editor"></Editor>
       <form  v-if="!show_editor" id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
@@ -55,6 +63,7 @@ import ParamButton from './ParamButton.vue'
 import Editor from './Editor.vue'
 import ParamSelect from './ParamSelect.vue'
 import ParamPrompt from './ParamPrompt.vue'
+
 export default {
   name: 'MainDream',
   components: {
@@ -103,6 +112,10 @@ export default {
         'Sampler': 'k_lms',
         'Seed': '',
         'Input Prompt': ''
+      },
+      job_status: {
+          status: "",
+          queue: 0
       }
     }
   },
@@ -149,9 +162,9 @@ export default {
     updateImage(generatedImage) {
       console.log("updating image")
       this.generatedImages.push(generatedImage);
+      console.log(this.generatedImages);
     },
     onGenerateWss() {
-      
       this.generateWss({
         host: "wss://selas.dev/laion",
         prompt: this.params['Input Prompt'],
@@ -162,10 +175,14 @@ export default {
         samples: this.params['Number of Images'],
       })
     },
+    updateJobStatus(job_status) {
+      this.job_status = job_status;
+    },
     generateWss(params) {
       console.log("Connecting")
     const connection = new WebSocket(params.host)
-
+    // eslint-disable-next-line
+    const vm = this
     connection.onmessage = function(event) {
         const data = JSON.parse(event.data)
         if ("jobId" in data) { 
@@ -177,18 +194,33 @@ export default {
             const images = data["images"]
             const nPreviousJobs = data["nPreviousJobs"]
             if (status == "pending") {
-                console.log('status: %s - queue position: %d', status, queue)
+              vm.updateJobStatus({
+                  status: "pending",
+                  queue: queue
+              });
+              console.log('status: %s - queue position: %d', status, queue)
             } else if (status == "accepted") {
-                console.log('status: %s - generation in progress', status)
+              vm.updateJobStatus({
+                  status: "accepted",
+                  queue: queue
+              });
+              console.log('status: %s - generation in progress', status)
             } else if (status == "completed") {
-                console.log('status: %s', status)
-                console.log('image: %s', images[0])
+              vm.updateJobStatus({
+                  status: "completed",
+                  queue: queue
+              });
+              console.log('status: %s', status)
+              for (const image in images){
+                vm.updateImage(images[image]);
+                console.log('image: %s', images[image]);
+              }
             } else {
-                console.log('unknown status: %s', status)
+              console.log('unknown status: %s', status)
             }
         }
         else {
-            console.log("unknown api response:", JSON.stringify(data))
+          console.log("unknown api response:", JSON.stringify(data))
         }
 
     }
