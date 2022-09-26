@@ -248,7 +248,6 @@ export default {
                 if (this.last_editor_mode == "initial") {
                     this.restoreMove();
                 }
-                //this.updatePreview();
                 this.editor_mode = 'mask';
                 this.last_editor_mode = 'mask';
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
@@ -259,9 +258,9 @@ export default {
                 this.mask_button_class = "btn btn-primary";
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-secondary";
+                this.updatePreview();
             } else if (control == "initial") {
                 this.resetMove();
-                //this.updatePreview();
                 this.editor_mode = 'initial';
                 this.last_editor_mode = 'initial';
                 this.$refs.svg_image_2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
@@ -272,11 +271,11 @@ export default {
                 this.mask_button_class = "btn btn-secondary";
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-secondary";
+                this.updatePreview();
             }  else if (control == "restore") {
                 if (this.last_editor_mode == "initial") {
                     this.restoreMove();
                 }
-                //this.updatePreview();
                 this.editor_mode = 'restore';
                 this.last_editor_mode = 'restore';
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
@@ -287,11 +286,11 @@ export default {
                 this.mask_button_class = "btn btn-secondary";
                 this.restore_button_class = "btn btn-primary";
                 this.move_button_class = "btn btn-secondary";
+                this.updatePreview();
             }  else if (control == "move") {
                 if (this.last_editor_mode == "initial") {
                     this.restoreMove();
                 }
-                //this.updatePreview();
                 this.editor_mode = 'move';
                 this.last_editor_mode = 'move';
                 this.$refs.svg_image_2.setAttribute('mask', 'url(#displayMask)');
@@ -301,6 +300,7 @@ export default {
                 this.mask_button_class = "btn btn-secondary";
                 this.restore_button_class = "btn btn-secondary";
                 this.move_button_class = "btn btn-primary";
+                this.updatePreview();
             }
         },
         getMousePos(event) {
@@ -353,7 +353,7 @@ export default {
                     this.points = [];
                     this.path_index++;
                     console.log(this.svg_paths);
-                    //this.updatePreview();
+                    this.updatePreview();
                 }
             }
         },
@@ -399,6 +399,7 @@ export default {
                 this.uploaded_image = e.target?.result;
                 this.$refs.svg_image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
                 this.$refs.svg_image_2.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.uploaded_image);
+                this.updatePreview();
             }
             reader.readAsDataURL(file); 
         },
@@ -408,9 +409,13 @@ export default {
         filterId(pathName, index) {
             return `${pathName}${index}`;
         },
-        // updatePreview() {
-        //     this.$emit("updatePreview", this.$refs.svg_display.outerHTML);
-        // },
+        updatePreview() {
+            const svgString = new XMLSerializer().serializeToString(this.$refs.svg_display);
+            const decoded = unescape(encodeURIComponent(svgString));
+            const base64 = btoa(decoded);
+            const svg = `data:image/svg+xml;base64,${base64}`;
+            this.$emit("updatePreview", svg);
+        },
     },
     computed: {
         cursor() {

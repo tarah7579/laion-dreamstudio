@@ -10,9 +10,9 @@
         <div class="col-auto col-lg-4 settings-wrapper" >
           <div class="action-buttons-wrapper">
             <button @click="closeEditor" v-if="show_editor" class="btn btn-primary settings settings-desktop is-active"><i class="bi bi-x-circle position-absolute active"></i></button>
-            <button v-else class="btn btn-primary settings settings-desktop is-active" ><i class="bi bi-gear-wide-connected position-absolute active"></i></button>
+            <!-- <button @click="closeSettings" v-else class="btn btn-primary settings settings-desktop is-active" ><i class="bi bi-gear-wide-connected position-absolute active"></i></button> -->
           </div>
-          <div class=""  style="height: 100%;">
+          <div v-if="show_settings" class=""  style="height: 100%;">
             <div class="params params-desktop" >
               <div >
                   <div v-if="job_status.status != ''" id="job_status">
@@ -32,8 +32,8 @@
                   <div class="initial-image">
                     <h3>Image</h3>
                     <div class="editor-image" style="width: 75px; height: 75px; background: none;">
-                        <!-- <div v-if="image_preview != ''" class="editor-image-preview" style="background-image:"><svg :innerHTML="image_preview"></svg></div> -->
-                        <div class="editor-image-preview" style="background-image:">None</div>
+                        <div v-if="image_preview != ''" class="editor-image-preview" :style="previewImage()"></div>
+                        <div v-else class="editor-image-preview" style="background-image:">None</div>
                     </div>
                     <div class="show-editor">
                         <button @click="showEditor" class="btn btn-primary">Show Editor</button>
@@ -46,7 +46,7 @@
       </div>
     </div>
     <div :class="promptWrapper">
-      <Editor @closeEditor="closeEditor" v-if="show_editor"></Editor>
+      <Editor @updatePreview="updatePreview" @closeEditor="closeEditor" v-if="show_editor"></Editor>
       <form  v-if="!show_editor" id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
         <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>
@@ -116,7 +116,8 @@ export default {
       job_status: {
           status: "",
           queue: 0
-      }
+      },
+      show_settings: true,
     }
   },
   methods: {
@@ -127,6 +128,13 @@ export default {
         this.show_editor = true
       }
     },
+    closeSettings() {
+      if (this.show_settings) {
+        this.show_settings = false
+      } else {
+        this.show_settings = true
+      }
+    },
     closeEditor() {
       this.show_editor = false
     },
@@ -134,9 +142,13 @@ export default {
       this.params[name] = input;
       console.log(this.params);
     },
-    // updatePreview(image) {
-    //   this.image_preview = image;
-    // },
+    previewImage() {
+      return 'background-image: url(' + this.image_preview + ')';
+    },
+    updatePreview(image) {
+      const svg = image;
+      this.image_preview = svg;
+    },
     newSession: async function () {
       const response = await fetch("api/user/new", {
           method: "get",
@@ -165,6 +177,7 @@ export default {
       console.log(this.generatedImages);
     },
     onGenerateWss() {
+      this.generatedImages = [];
       this.generateWss({
         host: "wss://selas.dev/laion",
         prompt: this.params['Input Prompt'],
@@ -215,6 +228,7 @@ export default {
                 vm.updateImage(images[image]);
                 console.log('image: %s', images[image]);
               }
+              vm.image_preview = "";
             } else {
               console.log('unknown status: %s', status)
             }
