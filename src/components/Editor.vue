@@ -36,7 +36,7 @@
                             </filter>
                         </defs>
                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="black"></rect>
-                        <svg :x="move_x" :y="move_y" :width="width" :height="height" :viewBox="viewBox" preserveAspectRatio="slice">
+                        <svg :x="move_x" :y="move_y" :width="width" :height="height" :viewBox="viewBox" preserveAspectRatio="xMidYMid slice">
                             <defs v-if="svg_paths.length > 0">
                                 <filter v-for="(item, index) in svg_paths" :key="index"
                                  :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
@@ -67,13 +67,13 @@
                                 </mask>
                             </defs>
                             <image opacity="0" ref="svg_image" x="0" y="0" width="100%" height="100%"
-                             mask="url(#renderMask)" filter="url(#renderImageWhite)" preserveAspectRatio="slice"></image>
+                             mask="url(#renderMask)" filter="url(#renderImageWhite)" preserveAspectRatio="xMidYMid slice"></image>
                         </svg>
                     </svg>
                 </div>
                 <div class="svg-wrapper" :style="svgStyle">
                     <svg ref="svg_display" class="svg-display" :width="width" :height="height"  overflow="hidden">
-                        <svg :x="move_x" :y="move_y" :width="width" :height="height"  :viewBox="viewBox" preserveAspectRatio="slice">
+                        <svg :x="move_x" :y="move_y" :width="width" :height="height"  :viewBox="viewBox" preserveAspectRatio="xMidYMid slice">
                             <defs v-if="svg_paths.length > 0">
                                 <filter v-for="(item, index) in svg_paths" :key="index"
                                  :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
@@ -93,7 +93,7 @@
                                 </mask>
                             </defs>
                             <image :opacity="this.image_opacity/100" ref="svg_image_2" x="0" y="0" width="100%" height="100%"
-                             mask="url(#displayMask)" preserveAspectRatio="slice"></image>
+                             mask="url(#displayMask)" preserveAspectRatio="xMidYMid slice"></image>
                         </svg>
                     </svg>
                 </div>
