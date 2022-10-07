@@ -46,7 +46,7 @@
       </div>
     </div>
     <div :class="promptWrapper">
-      <Editor @updatePreview="updatePreview" @closeEditor="closeEditor" v-if="show_editor"></Editor>
+      <Editor @updatePreview="updatePreview" @closeEditor="closeEditor" :width="this.params['Width']" :height="this.params['Height']" v-if="show_editor"></Editor>
       <form  v-if="!show_editor" id="prompt-form" class="d-flex flex-column flex-lg-row align-items-center" >
         <ParamPrompt @updateValue="updateParams" param_name="Input Prompt" param_value="" />
         <ParamButton buttonText="Dream" @click="this.onGenerateWss"/>

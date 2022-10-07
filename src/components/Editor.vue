@@ -2,7 +2,7 @@
 <div class="editor-container" style="opacity: 1; filter: none;">
     <div class="editor-wrapper">
         <div class="editor-display-wrapper" style="">
-            <div class="editor-display" style="width: 512px; height: 512px;">
+            <div class="editor-display" :style="svgStyle">
                 <div class="controls-horizontal controls-top">
                     <ControlSlider v-if="image_strength_visible" @updateValue="updateImageStrength" param_name="image_strength" param_desc="Image Strength" class="control control-slider image-strength" :param_value=50 :param_min=1 :param_max=99></ControlSlider>
                     <ControlSlider v-if="masking_controls_visible" @updateValue="updateBrushSize" param_name="brush_size" param_desc="Brush Size" class="control control-slider" :param_value=100 :param_min=1 :param_max=500></ControlSlider>
@@ -26,9 +26,9 @@
                 </div>
                 <div v-if="!uploaded_image" class="placeholder"><div class="placeholder-icon"><i class="bi bi-image"></i></div> Upload an image to start! </div>
                 <img ref="uploaded_image" class="uploaded-image">
-                <canvas ref="canvas" width="512" height="512" style="position: absolute; opacity: 0;"></canvas>
-                <div class="svg-wrapper" style="width: 512px; height: 512px; transform: scale(1);">
-                    <svg class="svg-rendered" width="512" height="512" overflow="hidden">
+                <canvas ref="canvas" :width="width" :height="height" style="position: absolute; opacity: 0;"></canvas>
+                <div class="svg-wrapper" :style="svgStyle">
+                    <svg class="svg-rendered" :width="width" :height="height"  overflow="hidden">
                         <defs>
                             <filter id="renderImageNoise" x="0" y="0" width="100%" height="100%">
                                 <feTile in="SourceGraphic" x="50" y="50" width="100" height="100"></feTile>
@@ -36,7 +36,7 @@
                             </filter>
                         </defs>
                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="black"></rect>
-                        <svg :x="move_x" :y="move_y" :width="move_w" :height="move_h" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
+                        <svg :x="move_x" :y="move_y" :width="width" :height="height" :viewBox="viewBox" preserveAspectRatio="slice">
                             <defs v-if="svg_paths.length > 0">
                                 <filter v-for="(item, index) in svg_paths" :key="index"
                                  :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
@@ -54,7 +54,7 @@
                                             1 1 1 1 0"></feColorMatrix>
                                 </filter>
                                 <mask ref="renderMask" id="renderMask">
-                                    <g viewBox="0 0 512 512" filter="url(#renderBlur0)">
+                                    <g :viewBox="viewBox" filter="url(#renderBlur0)">
                                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="#FFFFFF" opacity="0"></rect>
                                         <path v-for="(item, index) in svg_paths" :key="index"
                                          :d="item.path"
@@ -67,20 +67,20 @@
                                 </mask>
                             </defs>
                             <image opacity="0" ref="svg_image" x="0" y="0" width="100%" height="100%"
-                             mask="url(#renderMask)" filter="url(#renderImageWhite)" preserveAspectRatio="xMidYMid slice"></image>
+                             mask="url(#renderMask)" filter="url(#renderImageWhite)" preserveAspectRatio="slice"></image>
                         </svg>
                     </svg>
                 </div>
-                <div class="svg-wrapper" style="width: 512px; height: 512px; transform: scale(1);">
-                    <svg ref="svg_display" class="svg-display" width="512" height="512" overflow="hidden">
-                        <svg :x="move_x" :y="move_y" :width="move_w" :height="move_h" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid slice">
+                <div class="svg-wrapper" :style="svgStyle">
+                    <svg ref="svg_display" class="svg-display" :width="width" :height="height"  overflow="hidden">
+                        <svg :x="move_x" :y="move_y" :width="width" :height="height"  :viewBox="viewBox" preserveAspectRatio="slice">
                             <defs v-if="svg_paths.length > 0">
                                 <filter v-for="(item, index) in svg_paths" :key="index"
                                  :id="filterId('displayBlur', index)" x="-1000" y="-1000" width="3000" height="3000">
                                     <feGaussianBlur in="SourceGraphic" :stdDeviation="item.b/5"></feGaussianBlur>
                                 </filter>
                                 <mask ref="displayMask" id="displayMask">
-                                    <g viewBox="0 0 512 512">
+                                    <g :viewBox="viewBox">
                                         <rect x="-1000" y="-1000" width="3000" height="3000" fill="#FFFFFF"></rect>
                                         <path v-for="(item, index) in svg_paths"
                                         :key="index" :d="item.path"
@@ -93,7 +93,7 @@
                                 </mask>
                             </defs>
                             <image :opacity="this.image_opacity/100" ref="svg_image_2" x="0" y="0" width="100%" height="100%"
-                             mask="url(#displayMask)" preserveAspectRatio="xMidYMid slice"></image>
+                             mask="url(#displayMask)" preserveAspectRatio="slice"></image>
                         </svg>
                     </svg>
                 </div>
@@ -157,10 +157,15 @@ import ControlSlider from './ControlSlider.vue';
 export default {
     name: "Editor",
     props: {
-        showing: {
-            type: Boolean,
+        width: {
+            type: Number,
+            default: 512
         },
-        generation: null
+        height: {
+            type: Number,
+            default: 512
+        },
+        
     },
     data: function () {
         return {
@@ -198,11 +203,15 @@ export default {
         previous_move_w: 512,
         previous_move_h: 512,
         path_index: 0,
+        initial_width: 512,
+        initial_height: 512,
         }
     },
     mounted() {
         this.$refs.uploaded_image.src =  '';
-        
+        this.initial_width = this.width;
+        this.initial_height = this.height;
+
         const canvas = this.$refs.canvas;
         const ctx = canvas.getContext("2d");
         this.ctx = ctx;
@@ -234,8 +243,8 @@ export default {
             this.previous_move_h = this.move_h;
             this.move_x = 0;
             this.move_y = 0;
-            this.move_w = 512;
-            this.move_h = 512;
+            this.move_w = this.initial_width;
+            this.move_h = this.initial_height;
         },
         restoreMove() {
             this.move_x = this.previous_move_x;
@@ -436,7 +445,14 @@ export default {
                 cursor = `cursor: default;`;
             }
             return cursor;
-        }
+        },
+        viewBox() {
+            return `0 0 ${this.width} ${this.height}`;
+        },
+        svgStyle() {
+            return `width: ${this.width}px; height: ${this.height}px; transform: scale(1);`;
+        },
+
     },
     components: { ControlSlider }
 }
